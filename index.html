@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Endtimez Muzik - Holy Music by Darak iBar. MIDNIGHT is out now.">
     <title>Endtimez Muzik | Holy Music</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;600&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
     <div id="grain-overlay"></div>
     <div id="ethereal-glow"></div>
-    
+
     <nav>
         <div class="logo-container">
             <a href="#hero"><img src="assets/endtimez.png" alt="Endtimez Muzik Logo" class="nav-logo"></a>
@@ -37,12 +41,17 @@
             </div>
         </section>
 
-        <section id="release" class="fade-in">
+        <section id="release" class="fade-in video-section">
+            <video autoplay loop muted playsinline class="bg-video">
+                <source src="assets/images/midnight.mp4" type="video/mp4">
+            </video>
+            <div class="video-overlay"></div>
             <div class="content-wrapper">
                 <h2>MIDNIGHT</h2>
                 <h3 class="gold-text">IS OUT NOW</h3>
                 <div class="release-actions">
-                    <a href="https://endtimezmuzik.com/product/midnight/" class="btn primary-btn" target="_blank">DOWNLOAD NOW</a>
+                    <a href="https://endtimezmuzik.com/product/midnight/" class="btn primary-btn"
+                        target="_blank">DOWNLOAD NOW</a>
                 </div>
             </div>
         </section>
@@ -50,7 +59,8 @@
         <section id="newsletter" class="fade-in">
             <div class="content-wrapper glass-panel">
                 <h2>Subscribe</h2>
-                <p>Keep up with all things Endtimez Muzik & Darak iBar related; you will be instantly updated on all upcoming News and Releases.</p>
+                <p>Keep up with all things Endtimez Muzik & Darak iBar related; you will be instantly updated on all
+                    upcoming News and Releases.</p>
                 <form class="newsletter-form" action="#" method="POST">
                     <div class="input-group">
                         <input type="text" id="name" name="name" placeholder="Name" required>
@@ -81,4 +91,5 @@
 
     <script src="script.js"></script>
 </body>
+
 </html>
