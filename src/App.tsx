@@ -82,15 +82,23 @@ function Home({ user }: { user: any }) {
   if (user) return <Navigate to="/profile" />;
 
   return (
-    <main>
-      <section id="hero" className="fade-in" style={{ paddingBottom: '0rem' }}>
-        <div className="hero-content">
-          <img src="/assets/endtimez.png" alt="Endtimez Muzik Logo" className="main-logo" />
-          <h1 className="glitch" data-text="The Endtimez Hub">The Endtimez Hub</h1>
-          <p className="subtitle" style={{ marginBottom: '0' }}>Your sanctuary at the edge of the world.</p>
-        </div>
-      </section>
-      <Login />
+    <main style={{ position: 'relative', minHeight: '100vh', overflow: 'hidden' }}>
+      <video 
+        autoPlay loop muted playsInline 
+        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: -1, opacity: 0.5 }}
+      >
+        <source src="/assets/videos/lastdayz_2027.mp4" type="video/mp4" />
+      </video>
+      <div style={{ position: 'relative', zIndex: 1, height: '100%', display: 'flex', flexDirection: 'column' }}>
+        <section id="hero" className="fade-in" style={{ paddingBottom: '0rem' }}>
+          <div className="hero-content">
+            <img src="/assets/endtimez.png" alt="Endtimez Muzik Logo" className="main-logo" />
+            <h1 className="glitch" data-text="The Endtimez Hub">The Endtimez Hub</h1>
+            <p className="subtitle" style={{ marginBottom: '0' }}>Your sanctuary at the edge of the world.</p>
+          </div>
+        </section>
+        <Login />
+      </div>
     </main>
   );
 }

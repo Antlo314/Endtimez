@@ -54,9 +54,12 @@ export default function Store() {
       </div>
 
       {/* Hero Album - MIDNIGHT */}
-      <div className="glass-panel hero-album" style={{ display: 'flex', gap: '3rem', marginTop: '2rem', alignItems: 'center', padding: '3rem' }}>
-        <img src="/assets/images/midnight_cover.png" alt="Midnight Cover" style={{ width: '300px', height: '300px', borderRadius: '12px', boxShadow: '0 10px 30px rgba(0,0,0,0.6)', border: '2px solid var(--color-gold-radiant)' }} />
-        <div>
+      <div className="glass-panel hero-album" style={{ display: 'flex', gap: '3rem', marginTop: '2rem', alignItems: 'center', padding: '3rem', position: 'relative', overflow: 'hidden' }}>
+        <video autoPlay loop muted playsInline style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0, opacity: 0.15, pointerEvents: 'none' }}>
+           <source src="/assets/videos/endtimezmuzik.mp4" type="video/mp4" />
+        </video>
+        <img src="/assets/images/midnight_cover.png" alt="Midnight Cover" style={{ width: '300px', height: '300px', borderRadius: '12px', boxShadow: '0 10px 30px rgba(0,0,0,0.6)', border: '2px solid var(--color-gold-radiant)', position: 'relative', zIndex: 1 }} />
+        <div style={{ position: 'relative', zIndex: 1 }}>
           <span style={{ background: 'var(--color-gold-radiant)', color: 'var(--color-obsidian)', padding: '5px 10px', borderRadius: '4px', fontSize: '0.8rem', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '1rem', display: 'inline-block' }}>New Arrival</span>
           <h1 style={{ fontSize: '4rem', margin: '0', lineHeight: 1 }}>MIDNIGHT</h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', margin: '1rem 0 2rem' }}>The definitive soundtrack to the Endtimes.</p>

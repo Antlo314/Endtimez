@@ -112,10 +112,15 @@ export default function Chat({ user, profile }: { user: any, profile: any }) {
   };
 
   return (
-    <div className="page-container fade-in" style={{ height: 'calc(100vh - 120px)', display: 'flex', flexDirection: 'column' }}>
-      <h2 className="glitch" data-text="The Codex" style={{ marginBottom: '1rem' }}>The Codex</h2>
+    <div className="page-container fade-in" style={{ height: 'calc(100vh - 120px)', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+      {/* Cinematic UFO Atmospheric Loop */}
+      <video autoPlay loop muted playsInline style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: -1, opacity: 0.15, pointerEvents: 'none', borderRadius: '12px' }}>
+        <source src="/assets/videos/end_ufo.mp4" type="video/mp4" />
+      </video>
       
-      <div className="glass-panel codex-container" style={{ flex: 1, display: 'flex', gap: '1.5rem', padding: '1.5rem', overflow: 'hidden' }}>
+      <h2 className="glitch" data-text="The Codex" style={{ marginBottom: '1rem', position: 'relative', zIndex: 1 }}>The Codex</h2>
+      
+      <div className="glass-panel codex-container" style={{ flex: 1, display: 'flex', gap: '1.5rem', padding: '1.5rem', overflow: 'hidden', position: 'relative', zIndex: 1, background: 'rgba(10, 8, 5, 0.75)' }}>
         
         {/* Sidebar Channels */}
         <div className="codex-sidebar" style={{ width: '250px', borderRight: '1px solid var(--color-earth)', paddingRight: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
