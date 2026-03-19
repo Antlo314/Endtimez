@@ -114,7 +114,13 @@ export default function Chat({ user, profile }: { user: any, profile: any }) {
   return (
     <div className="page-container fade-in" style={{ height: 'calc(100vh - 120px)', display: 'flex', flexDirection: 'column', position: 'relative', isolation: 'isolate' }}>
       {/* Cinematic UFO Atmospheric Loop */}
-      <video autoPlay loop muted playsInline style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: -1, opacity: 0.3, pointerEvents: 'none', borderRadius: '12px' }}>
+      <video autoPlay loop muted playsInline style={{ 
+        position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', 
+        objectFit: 'contain', zIndex: -1, opacity: 0.2, pointerEvents: 'none', borderRadius: '12px',
+        mixBlendMode: 'screen',
+        WebkitMaskImage: 'radial-gradient(ellipse at center, black 30%, transparent 80%)',
+        maskImage: 'radial-gradient(ellipse at center, black 30%, transparent 80%)'
+      }}>
         <source src="/assets/videos/end_ufo.mp4" type="video/mp4" />
       </video>
       

@@ -85,7 +85,13 @@ function Home({ user }: { user: any }) {
     <main style={{ position: 'relative', minHeight: '100vh', overflow: 'hidden', isolation: 'isolate' }}>
       <video 
         autoPlay loop muted playsInline 
-        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: -1, opacity: 0.6 }}
+        style={{ 
+          position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', 
+          objectFit: 'contain', zIndex: -1, opacity: 0.25, pointerEvents: 'none',
+          mixBlendMode: 'screen',
+          WebkitMaskImage: 'radial-gradient(circle at center, black 40%, transparent 90%)',
+          maskImage: 'radial-gradient(circle at center, black 40%, transparent 90%)'
+        }}
       >
         <source src="/assets/videos/lastdayz_2027.mp4" type="video/mp4" />
       </video>
