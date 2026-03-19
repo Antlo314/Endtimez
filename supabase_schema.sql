@@ -141,3 +141,13 @@ create policy "Roadmap viewable by everyone." on app_roadmap for select using (t
 create policy "Only admins can modify roadmap." on app_roadmap for all using (
   exists (select 1 from profiles where id = auth.uid() and role = 'admin')
 );
+
+-- 7. Architect Purge Permissions (Deletions)
+-- Admins need explicit ROW LEVEL SECURITY permission to delete profiles and global chat messages.
+create policy "Admins can delete messages." on messages for delete using (
+  exists (select 1 from profiles where id = auth.uid() and role = 'admin')
+);
+
+create policy "Admins can delete profiles." on profiles for delete using (
+  exists (select 1 from profiles where id = auth.uid() and role = 'admin')
+);

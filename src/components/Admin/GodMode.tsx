@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Upload, Megaphone, CalendarPlus, CheckCircle, AlertCircle } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Upload, Megaphone, CalendarPlus, CheckCircle, AlertCircle, Trash2, Users, MessageSquare, Video } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 
 export default function GodMode({ user, profile }: { user: any, profile?: any }) {
@@ -34,6 +34,48 @@ export default function GodMode({ user, profile }: { user: any, profile?: any })
   const [chDesc, setChDesc] = useState('');
   const [chLoading, setChLoading] = useState(false);
   const [chMsg, setChMsg] = useState('');
+
+  // Deletion Matrix State
+  const [dbBulletins, setDbBulletins] = useState<any[]>([]);
+  const [dbVideos, setDbVideos] = useState<any[]>([]);
+  const [dbMessages, setDbMessages] = useState<any[]>([]);
+  const [dbUsers, setDbUsers] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (user && profile?.role === 'admin') {
+      const fetchAdminData = async () => {
+        const [bullRes, vidRes, msgRes, usrRes] = await Promise.all([
+          supabase.from('app_bulletin').select('*').order('created_at', { ascending: false }).limit(20),
+          supabase.from('app_videos').select('*').order('created_at', { ascending: false }).limit(20),
+          supabase.from('messages').select('*, profiles(username, avatar_url)').order('created_at', { ascending: false }).limit(50),
+          supabase.from('profiles').select('*').order('created_at', { ascending: false }).limit(50)
+        ]);
+        if (bullRes.data) setDbBulletins(bullRes.data);
+        if (vidRes.data) setDbVideos(vidRes.data);
+        if (msgRes.data) setDbMessages(msgRes.data);
+        if (usrRes.data) setDbUsers(usrRes.data);
+      };
+      fetchAdminData();
+    }
+  }, [user, profile]);
+
+  const handlePurge = async (table: string, id: string) => {
+    if (!window.confirm(`WARNING: Are you sure you want to permanently delete this from ${table}? This cannot be undone.`)) return;
+    
+    const { error } = await supabase.from(table).delete().eq('id', id);
+    if (!error) {
+      if (table === 'app_bulletin') setDbBulletins(prev => prev.filter(x => x.id !== id));
+      if (table === 'app_videos') setDbVideos(prev => prev.filter(x => x.id !== id));
+      if (table === 'messages') setDbMessages(prev => prev.filter(x => x.id !== id));
+      if (table === 'profiles') {
+        setDbUsers(prev => prev.filter(x => x.id !== id));
+        setDbMessages(prev => prev.filter(x => x.user_id !== id));
+      }
+      alert('Asset permanently purged.');
+    } else {
+      alert(`Error purging asset: ${error.message}`);
+    }
+  };
 
   if (!user || profile?.role !== 'admin') {
     return (
@@ -195,6 +237,72 @@ export default function GodMode({ user, profile }: { user: any, profile?: any })
           </button>
         </div>
 
+      </div>
+
+      {/* The Cleansing (Purging Protocols) */}
+      <div style={{ marginTop: '4rem', paddingTop: '2rem', borderTop: '1px solid var(--color-earth)' }}>
+        <h2 className="glitch" data-text="The Cleansing Matrix" style={{ fontSize: '2rem', marginBottom: '2rem' }}>The Cleansing Matrix</h2>
+        <div className="admin-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '2rem' }}>
+          
+          {/* Users Purge */}
+          <div className="glass-panel" style={{ borderTop: '4px solid #ff3333' }}>
+            <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}><Users size={24}/> Excommunicate Profiles</h3>
+            <div style={{ maxHeight: '300px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              {dbUsers.map(u => (
+                <div key={u.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(0,0,0,0.5)', padding: '0.5rem', borderRadius: '4px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <img src={u.avatar_url || '/assets/endtimez.png'} style={{ width: '24px', height: '24px', borderRadius: '50%' }} alt=""/>
+                    <span style={{ fontSize: '0.9rem', color: 'var(--color-parchment)' }}>{u.username}</span>
+                  </div>
+                  <button onClick={() => handlePurge('profiles', u.id)} style={{ background: 'transparent', border: 'none', color: '#ffaaaa', cursor: 'pointer' }}><Trash2 size={18} /></button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Messages Purge */}
+          <div className="glass-panel" style={{ borderTop: '4px solid #ff3333' }}>
+            <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}><MessageSquare size={24}/> Purge Codex Chat</h3>
+            <div style={{ maxHeight: '300px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              {dbMessages.map(m => (
+                <div key={m.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(0,0,0,0.5)', padding: '0.5rem', borderRadius: '4px' }}>
+                  <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '250px' }}>
+                    <span style={{ color: 'var(--gold)', fontSize: '0.8rem', marginRight: '0.5rem' }}>{m.profiles?.username}:</span>
+                    <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{m.message}</span>
+                  </div>
+                  <button onClick={() => handlePurge('messages', m.id)} style={{ background: 'transparent', border: 'none', color: '#ffaaaa', cursor: 'pointer' }}><Trash2 size={18} /></button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Videos Purge */}
+          <div className="glass-panel" style={{ borderTop: '4px solid #ff3333' }}>
+            <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}><Video size={24}/> Purge Vault Assets</h3>
+            <div style={{ maxHeight: '300px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              {dbVideos.map(v => (
+                <div key={v.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(0,0,0,0.5)', padding: '0.5rem', borderRadius: '4px' }}>
+                  <span style={{ fontSize: '0.8rem', color: 'var(--color-parchment)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '250px' }}>{v.title}</span>
+                  <button onClick={() => handlePurge('app_videos', v.id)} style={{ background: 'transparent', border: 'none', color: '#ffaaaa', cursor: 'pointer' }}><Trash2 size={18} /></button>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          {/* Bulletins Purge */}
+          <div className="glass-panel" style={{ borderTop: '4px solid #ff3333' }}>
+            <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}><Megaphone size={24}/> Purge Decrees</h3>
+            <div style={{ maxHeight: '300px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              {dbBulletins.map(b => (
+                <div key={b.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(0,0,0,0.5)', padding: '0.5rem', borderRadius: '4px' }}>
+                  <span style={{ fontSize: '0.8rem', color: 'var(--color-parchment)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '250px' }}>{b.title}</span>
+                  <button onClick={() => handlePurge('app_bulletin', b.id)} style={{ background: 'transparent', border: 'none', color: '#ffaaaa', cursor: 'pointer' }}><Trash2 size={18} /></button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
   );
