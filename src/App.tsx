@@ -87,7 +87,7 @@ function Home({ user }: { user: any }) {
         autoPlay loop muted playsInline 
         style={{ 
           position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', 
-          objectFit: 'cover', zIndex: -1, opacity: 0.5, pointerEvents: 'none',
+          objectFit: 'cover', zIndex: -1, opacity: 0.65, pointerEvents: 'none',
           mixBlendMode: 'screen',
           WebkitMaskImage: 'radial-gradient(circle at center, black 40%, transparent 90%)',
           maskImage: 'radial-gradient(circle at center, black 40%, transparent 90%)'

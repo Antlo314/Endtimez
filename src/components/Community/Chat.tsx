@@ -116,7 +116,7 @@ export default function Chat({ user, profile }: { user: any, profile: any }) {
       {/* Cinematic UFO Atmospheric Loop */}
       <video autoPlay loop muted playsInline style={{ 
         position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', 
-        objectFit: 'cover', zIndex: -1, opacity: 0.4, pointerEvents: 'none', borderRadius: '12px',
+        objectFit: 'cover', zIndex: -1, opacity: 0.55, pointerEvents: 'none', borderRadius: '12px',
         mixBlendMode: 'screen',
         WebkitMaskImage: 'radial-gradient(ellipse at center, black 30%, transparent 80%)',
         maskImage: 'radial-gradient(ellipse at center, black 30%, transparent 80%)'

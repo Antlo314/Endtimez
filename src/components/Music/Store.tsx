@@ -43,7 +43,7 @@ export default function Store() {
 
   return (
     <div className="page-container fade-in">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
         <h2 className="glitch" data-text="Holy Music Catalog">Holy Music Catalog</h2>
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
           <span style={{ color: 'var(--color-sand)' }}>Support the Economy</span>
@@ -57,7 +57,7 @@ export default function Store() {
       <div className="glass-panel hero-album" style={{ display: 'flex', gap: '3rem', marginTop: '2rem', alignItems: 'center', padding: '3rem', position: 'relative', overflow: 'hidden', isolation: 'isolate', border: 'none' }}>
         <video autoPlay loop muted playsInline style={{ 
           position: 'absolute', top: '50%', left: '50%', width: '150%', height: '150%', transform: 'translate(-50%, -50%)',
-          objectFit: 'cover', zIndex: -1, opacity: 0.5, pointerEvents: 'none',
+          objectFit: 'cover', zIndex: -1, opacity: 0.65, pointerEvents: 'none',
           mixBlendMode: 'screen',
           WebkitMaskImage: 'radial-gradient(circle at top right, black 20%, transparent 70%)',
           maskImage: 'radial-gradient(circle at top right, black 20%, transparent 70%)'
@@ -81,7 +81,7 @@ export default function Store() {
         
         {/* Albums Collection */}
         <div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--color-earth)', paddingBottom: '1rem', marginBottom: '1.5rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem', borderBottom: '1px solid var(--color-earth)', paddingBottom: '1rem', marginBottom: '1.5rem' }}>
             <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', margin: 0 }}>
               <Disc size={24} color="var(--color-bronze)" /> Complete Works
             </h3>
@@ -103,7 +103,7 @@ export default function Store() {
 
         {/* Singles & Snippets */}
         <div className="glass-panel" style={{ padding: '2.5rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--color-earth)', paddingBottom: '1rem', marginBottom: '1.5rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem', borderBottom: '1px solid var(--color-earth)', paddingBottom: '1rem', marginBottom: '1.5rem' }}>
             <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', margin: 0 }}>
               <MusicIcon size={24} color="var(--color-bronze)" /> Singles & Snippets
             </h3>
