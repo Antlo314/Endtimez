@@ -115,10 +115,10 @@ export default function Chat({ user, profile }: { user: any, profile: any }) {
     <div className="page-container fade-in" style={{ height: 'calc(100vh - 120px)', display: 'flex', flexDirection: 'column' }}>
       <h2 className="glitch" data-text="The Codex" style={{ marginBottom: '1rem' }}>The Codex</h2>
       
-      <div className="glass-panel" style={{ flex: 1, display: 'flex', gap: '1.5rem', padding: '1.5rem', overflow: 'hidden' }}>
+      <div className="glass-panel codex-container" style={{ flex: 1, display: 'flex', gap: '1.5rem', padding: '1.5rem', overflow: 'hidden' }}>
         
         {/* Sidebar Channels */}
-        <div style={{ width: '250px', borderRight: '1px solid var(--color-earth)', paddingRight: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <div className="codex-sidebar" style={{ width: '250px', borderRight: '1px solid var(--color-earth)', paddingRight: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <h4 style={{ color: 'var(--color-bronze)' }}>Channels</h4>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             {channels.length > 0 ? channels.map(c => (

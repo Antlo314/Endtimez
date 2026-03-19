@@ -14,25 +14,67 @@ import { BookOpen } from 'lucide-react';
 
 function Navigation({ user, profile }: { user: any, profile: any }) {
   return (
-    <nav>
-      <div className="logo-container">
+    <>
+      {/* Desktop Navigation */}
+      <nav className="desktop-nav">
+        <div className="logo-container">
+          <Link to="/">
+            <img src="/assets/endtimez.png" alt="Endtimez Muzik Logo" className="nav-logo" />
+          </Link>
+        </div>
+        <div className="nav-links">
+          <Link to={user ? "/profile" : "/login"}>
+            <UserCircle size={18}/> {user ? 'Sanctum' : 'Enter'}
+          </Link>
+          <Link to="/chat"><MessageSquare size={18}/> Codex</Link>
+          <Link to="/calendar"><Calendar size={18}/> Epoch</Link>
+          <Link to="/music"><Music size={18}/> Hymns</Link>
+          <Link to="/teachings"><BookOpen size={18}/> Vault</Link>
+          {profile?.role === 'admin' && (
+            <Link to="/admin" className="accent-link"><Crown size={18}/> The Prophet's Watch</Link>
+          )}
+        </div>
+      </nav>
+
+      {/* Mobile Top Header (Just Logo) */}
+      <div className="mobile-topbar fade-in">
         <Link to="/">
-          <img src="/assets/endtimez.png" alt="Endtimez Muzik Logo" className="nav-logo" />
+          <img src="/assets/endtimez.png" alt="Endtimez Muzik Logo" className="mobile-nav-logo" />
         </Link>
       </div>
-      <div className="nav-links">
-        <Link to={user ? "/profile" : "/login"}>
-          <UserCircle size={18}/> {user ? 'Sanctum' : 'Enter'}
-        </Link>
-        <Link to="/chat"><MessageSquare size={18}/> Codex</Link>
-        <Link to="/calendar"><Calendar size={18}/> Epoch</Link>
-        <Link to="/music"><Music size={18}/> Hymns</Link>
-        <Link to="/teachings"><BookOpen size={18}/> Vault</Link>
-        {profile?.role === 'admin' && (
-          <Link to="/admin" className="accent-link"><Crown size={18}/> The Prophet's Watch</Link>
-        )}
-      </div>
-    </nav>
+
+      {/* Mobile Bottom Tab Bar */}
+      <nav className="mobile-bottom-nav">
+        <div className="mobile-nav-links">
+          <Link to={user ? "/profile" : "/login"}>
+            <UserCircle size={22}/>
+            <span>{user ? 'Sanctum' : 'Enter'}</span>
+          </Link>
+          <Link to="/chat">
+            <MessageSquare size={22}/>
+            <span>Codex</span>
+          </Link>
+          <Link to="/calendar">
+            <Calendar size={22}/>
+            <span>Epoch</span>
+          </Link>
+          <Link to="/music">
+            <Music size={22}/>
+            <span>Hymns</span>
+          </Link>
+          <Link to="/teachings">
+            <BookOpen size={22}/>
+            <span>Vault</span>
+          </Link>
+          {profile?.role === 'admin' && (
+            <Link to="/admin" className="accent-link" style={{ color: 'var(--color-gold-radiant)' }}>
+              <Crown size={22}/>
+              <span>Watch</span>
+            </Link>
+          )}
+        </div>
+      </nav>
+    </>
   );
 }
 
@@ -44,8 +86,8 @@ function Home({ user }: { user: any }) {
       <section id="hero" className="fade-in" style={{ paddingBottom: '0rem' }}>
         <div className="hero-content">
           <img src="/assets/endtimez.png" alt="Endtimez Muzik Logo" className="main-logo" />
-          <h1 className="glitch" data-text="Holy Music">Holy Music</h1>
-          <p className="subtitle" style={{ marginBottom: '0' }}>Experience the sound of the end times.</p>
+          <h1 className="glitch" data-text="The Endtimez Hub">The Endtimez Hub</h1>
+          <p className="subtitle" style={{ marginBottom: '0' }}>Your sanctuary at the edge of the world.</p>
         </div>
       </section>
       <Login />
