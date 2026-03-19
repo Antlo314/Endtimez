@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Send, Paperclip, Hash, Users, Crown, Image } from 'lucide-react';
+import { Send, Paperclip, Hash, User, Crown, Image } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 
 export default function Chat({ user, profile }: { user: any, profile: any }) {
@@ -58,7 +58,7 @@ export default function Chat({ user, profile }: { user: any, profile: any }) {
   const fetchMessages = async () => {
     const { data, error } = await supabase
       .from('messages')
-      .select('*, profiles(username, role)')
+      .select('*, profiles(username, role, avatar_url)')
       .eq('channel', activeChannel)
       .order('created_at', { ascending: true });
     
@@ -162,8 +162,13 @@ export default function Chat({ user, profile }: { user: any, profile: any }) {
               
               return (
                  <div key={msg.id} style={{ display: 'flex', gap: '1rem' }}>
-                  <div style={{ width: '40px', height: '40px', background: isAdmin ? 'var(--color-bronze)' : 'var(--color-earth)', borderRadius: '50%', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Users size={20} color="var(--color-obsidian)" />
+                  {/* Avatar */}
+                  <div style={{ width: '40px', height: '40px', borderRadius: '50%', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', background: isAdmin ? 'var(--color-bronze)' : 'var(--color-earth)', border: isAdmin ? '2px solid var(--color-gold-radiant)' : 'none' }}>
+                    {msg.profiles?.avatar_url ? (
+                      <img src={msg.profiles.avatar_url} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    ) : (
+                      <User size={20} color={isAdmin ? 'var(--bg-color)' : 'var(--color-parchment)'} />
+                    )}
                   </div>
                   <div>
                     <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem' }}>
