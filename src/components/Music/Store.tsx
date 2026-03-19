@@ -51,7 +51,7 @@ export default function Store() {
       </div>
 
       {/* Hero Album - MIDNIGHT */}
-      <div className="glass-panel" style={{ display: 'flex', gap: '3rem', marginTop: '2rem', alignItems: 'center', padding: '3rem' }}>
+      <div className="glass-panel hero-album" style={{ display: 'flex', gap: '3rem', marginTop: '2rem', alignItems: 'center', padding: '3rem' }}>
         <img src="/assets/images/midnight_cover.png" alt="Midnight Cover" style={{ width: '300px', height: '300px', borderRadius: '12px', boxShadow: '0 10px 30px rgba(0,0,0,0.6)', border: '2px solid var(--color-gold-radiant)' }} />
         <div>
           <span style={{ background: 'var(--color-gold-radiant)', color: 'var(--color-obsidian)', padding: '5px 10px', borderRadius: '4px', fontSize: '0.8rem', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '1rem', display: 'inline-block' }}>New Arrival</span>
@@ -65,7 +65,7 @@ export default function Store() {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(300px, 1fr) 2fr', gap: '3rem', marginTop: '2rem' }}>
+      <div className="store-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(300px, 1fr) 2fr', gap: '3rem', marginTop: '2rem' }}>
         
         {/* Albums Collection */}
         <div>

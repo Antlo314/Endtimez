@@ -54,8 +54,8 @@ export default function Teachings({ user }: { user: any, profile?: any }) {
   const isPremiumUnlocked = user && user.role === 'admin';
 
   const renderVideoCard = (video: any, isPremium: boolean = false, isPlaceholder: boolean = false) => (
-    <div key={video.id} className="glass-panel" style={{ padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column', border: isPremium ? '1px solid var(--gold)' : '1px solid var(--glass-border)' }}>
-      <div style={{ position: 'relative', height: '180px', background: isPlaceholder ? 'rgba(0,0,0,0.5)' : 'transparent', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <div key={video.id} className="glass-panel vault-card" style={{ padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column', border: isPremium ? '1px solid var(--gold)' : '1px solid var(--glass-border)' }}>
+      <div className="thumbnail-container" style={{ position: 'relative', height: '180px', background: isPlaceholder ? 'rgba(0,0,0,0.5)' : 'transparent', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <img 
           src={video.thumbnail} 
           alt={video.title} 
@@ -79,7 +79,7 @@ export default function Teachings({ user }: { user: any, profile?: any }) {
         </span>
       </div>
       
-      <div style={{ padding: '1.5rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <div className="info-container" style={{ padding: '1.5rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
         <h3 style={{ fontSize: '1.2rem', color: isPremium ? 'var(--gold)' : 'var(--color-parchment)', marginBottom: '0.5rem' }}>{video.title}</h3>
         <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1.5rem', flex: 1 }}>
           {isPremium ? 'Exclusive cinematic experience from DarakiBar. Unlocks soon.' : 'Deep dive into the prophetic timeline and scriptural mysteries.'}
@@ -113,19 +113,19 @@ export default function Teachings({ user }: { user: any, profile?: any }) {
       <div style={{ width: '100%' }}>
         {/* Popular Videos Row (UNLOCKED) */}
         <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-color)', marginBottom: '1.5rem', fontSize: '1.5rem', textAlign: 'left' }}><TrendingUp size={24} color="var(--gold)"/> Most Viewed Wisdom</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '2rem', marginBottom: '4rem' }}>
+        <div className="vault-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '2rem', marginBottom: '4rem' }}>
           {[...dynPopular, ...popularReleases].map(v => renderVideoCard(v, false))}
         </div>
 
         {/* Recent Videos Row (UNLOCKED) */}
         <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-color)', marginBottom: '1.5rem', fontSize: '1.5rem', textAlign: 'left' }}><Clock size={24} color="var(--gold)"/> Latest Prophetic Releases</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '2rem', marginBottom: '4rem' }}>
+        <div className="vault-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '2rem', marginBottom: '4rem' }}>
           {[...dynRecent, ...recentReleases].map(v => renderVideoCard(v, false))}
         </div>
         
         {/* Additional Vault Resources */}
         <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-color)', marginBottom: '1.5rem', fontSize: '1.5rem', textAlign: 'left' }}>Foundational Study</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '2rem', marginBottom: '4rem' }}>
+        <div className="vault-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '2rem', marginBottom: '4rem' }}>
           {freeVideos.map(v => renderVideoCard(v, false))}
         </div>
       </div>
@@ -141,7 +141,7 @@ export default function Teachings({ user }: { user: any, profile?: any }) {
           </p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '2rem', marginBottom: '4rem' }}>
+        <div className="vault-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '2rem', marginBottom: '4rem' }}>
           {[...dynPremium, ...premiumPlaceholders].map((v, i) => renderVideoCard(v, true, i >= dynPremium.length))}
         </div>
       </div>
