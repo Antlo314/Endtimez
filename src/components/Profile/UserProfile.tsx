@@ -4,17 +4,25 @@ import { supabase } from '../../lib/supabase';
 
 export default function UserProfile({ profile, onProfileUpdate }: { user: any, profile: any, onProfileUpdate: (id: string) => void }) {
   const [bio, setBio] = useState('');
+  const [username, setUsername] = useState('');
+  const [avatarUrl, setAvatarUrl] = useState('');
   const [saving, setSaving] = useState(false);
   const [bulletins, setBulletins] = useState<any[]>([]);
+  const [roadmap, setRoadmap] = useState<any[]>([]);
 
   useEffect(() => {
     supabase.from('app_bulletin').select('*').order('created_at', { ascending: false }).limit(3)
       .then(({ data }) => { if (data) setBulletins(data); });
+
+    supabase.from('app_roadmap').select('*').order('created_at', { ascending: true }).limit(5)
+      .then(({ data }) => { if (data) setRoadmap(data); });
   }, []);
 
   useEffect(() => {
-    if (profile?.bio) {
-      setBio(profile.bio);
+    if (profile) {
+      setBio(profile.bio || '');
+      setUsername(profile.username || '');
+      setAvatarUrl(profile.avatar_url || '');
     }
   }, [profile]);
 
@@ -25,7 +33,7 @@ export default function UserProfile({ profile, onProfileUpdate }: { user: any, p
   const handleSaveBio = async () => {
     if (!profile) return;
     setSaving(true);
-    await supabase.from('profiles').update({ bio }).eq('id', profile.id);
+    await supabase.from('profiles').update({ bio, username, avatar_url: avatarUrl }).eq('id', profile.id);
     onProfileUpdate(profile.id);
     setSaving(false);
   };
@@ -38,7 +46,7 @@ export default function UserProfile({ profile, onProfileUpdate }: { user: any, p
         <h2 className="glitch" data-text="The Sanctum">The Sanctum</h2>
         {profile.role === 'admin' && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(255, 204, 0, 0.15)', color: 'var(--color-gold-radiant)', padding: '5px 15px', borderRadius: '20px', border: '1px solid var(--color-gold-radiant)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px' }}>
-            <Crown size={14}/> God Mode Active
+            <Crown size={14}/> The Prophet's Watch Active
           </div>
         )}
       </div>
@@ -77,9 +85,17 @@ export default function UserProfile({ profile, onProfileUpdate }: { user: any, p
               Upcoming exclusive drops reserved for faithful supporters of the treasury.
             </p>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '12px', color: 'var(--color-parchment)', fontSize: '0.95rem' }}><CalendarIcon size={18} color="rgba(255,255,255,0.4)" /> <span style={{ color: 'var(--gold)', minWidth: '80px', fontWeight: 600 }}>SOON</span> Origin of the Nephilim Series</li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '12px', color: 'var(--color-parchment)', fontSize: '0.95rem' }}><CalendarIcon size={18} color="rgba(255,255,255,0.4)" /> <span style={{ color: 'var(--gold)', minWidth: '80px', fontWeight: 600 }}>TBA</span> Classified Transmission 02</li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '12px', color: 'rgba(255,255,255,0.5)', fontSize: '0.95rem' }}><CalendarIcon size={18} color="rgba(255,255,255,0.2)" /> <span style={{ color: 'rgba(212,175,55,0.5)', minWidth: '80px', fontWeight: 600 }}>TBA</span> Vault Archives Volume 3</li>
+              {roadmap.length > 0 ? roadmap.map(r => (
+                <li key={r.id} style={{ display: 'flex', alignItems: 'center', gap: '12px', color: 'var(--color-parchment)', fontSize: '0.95rem' }}>
+                  <CalendarIcon size={18} color="rgba(255,255,255,0.4)" /> 
+                  <span style={{ color: r.status === 'live' ? '#ffaaaa' : 'var(--gold)', minWidth: '80px', fontWeight: 600, textTransform: 'uppercase' }}>
+                    {r.status}
+                  </span> 
+                  {r.title}
+                </li>
+              )) : (
+                <p style={{ color: 'var(--text-secondary)' }}>No roadmap milestones documented.</p>
+              )}
             </ul>
           </div>
         </div>
@@ -92,16 +108,32 @@ export default function UserProfile({ profile, onProfileUpdate }: { user: any, p
             <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100px', background: 'linear-gradient(to bottom, rgba(212,175,55,0.15), transparent)' }}></div>
             
             <div style={{ position: 'relative', width: '130px', height: '130px', margin: '0 auto 1.5rem', borderRadius: '50%', overflow: 'hidden', border: '3px solid var(--gold)', background: 'var(--color-obsidian)', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}>
-              <img src={profile.avatar_url || '/assets/images/avatar_mock.png'} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <img src={avatarUrl || profile.avatar_url || '/assets/images/avatar_mock.png'} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'rgba(0,0,0,0.7)', padding: '6px', cursor: 'pointer', display: 'flex', justifyContent: 'center' }}>
                 <Upload size={16} color="var(--color-sand)" />
               </div>
             </div>
             
-            <h3 style={{ color: 'var(--color-parchment)', fontSize: '1.6rem', marginBottom: '0.3rem', fontFamily: 'var(--font-heading)' }}>{profile.username || 'Unnamed Soul'}</h3>
+            <input 
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Spiritual Moniker"
+              style={{ width: '100%', textAlign: 'center', background: 'transparent', border: 'none', borderBottom: '1px solid rgba(255,255,255,0.1)', color: 'var(--color-parchment)', fontSize: '1.6rem', marginBottom: '0.3rem', fontFamily: 'var(--font-heading)', outline: 'none' }}
+            />
+            
             <p style={{ color: 'var(--gold)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '2rem' }}>
               {profile.role === 'admin' ? 'Master Architect' : 'Sanctum Member'}
             </p>
+
+            <div style={{ textAlign: 'left', marginBottom: '1rem' }}>
+              <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.5rem' }}>Avatar Image URL</label>
+              <input 
+                value={avatarUrl}
+                onChange={(e) => setAvatarUrl(e.target.value)}
+                placeholder="https://..."
+                style={{ width: '100%', background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '4px', color: 'var(--color-parchment)', padding: '10px', fontSize: '0.9rem', outline: 'none' }}
+              />
+            </div>
 
             <div style={{ textAlign: 'left', marginBottom: '1.5rem' }}>
               <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.5rem' }}>Spiritual Biography</label>

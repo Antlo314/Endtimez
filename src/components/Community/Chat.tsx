@@ -1,24 +1,71 @@
 import { useState, useEffect, useRef } from 'react';
-import { Send, Paperclip, Hash, Users, Crown } from 'lucide-react';
+import { Send, Paperclip, Hash, Users, Crown, Image } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 
 export default function Chat({ user, profile }: { user: any, profile: any }) {
   const [messages, setMessages] = useState<any[]>([]);
+  const [channels, setChannels] = useState<any[]>([]);
+  const [onlineUsers, setOnlineUsers] = useState<any[]>([]);
   const [input, setInput] = useState('');
-  const [activeChannel, setActiveChannel] = useState('enochian-time');
+  const [mediaUrl, setMediaUrl] = useState('');
+  const [showMediaInput, setShowMediaInput] = useState(false);
+  const [activeChannel, setActiveChannel] = useState('general');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const fetchMessages = async () => {
-    const { data } = await supabase
-      .from('messages')
-      .select('*, profiles(username, role)')
-      .eq('channel', activeChannel)
-      .order('created_at', { ascending: true });
-    
-    if (data) setMessages(data);
-  };
+  // Fetch bindings shifted inside effect
 
   useEffect(() => {
+    supabase.from('app_channels').select('*').order('created_at', { ascending: true })
+      .then(({ data }) => {
+        if (data && data.length > 0) {
+           setChannels(data);
+           if (!data.find(c => c.name === activeChannel)) {
+             setActiveChannel(data[0].name);
+           }
+        }
+      });
+  }, []);
+
+  useEffect(() => {
+    if (!profile || !user) return;
+    
+    const room = supabase.channel('codex_presence', {
+      config: { presence: { key: user.id } }
+    });
+    
+    room.on('presence', { event: 'sync' }, () => {
+      const state = room.presenceState();
+      const users = Object.values(state).flat() as any[];
+      
+      // Deduplicate by userId
+      const uniqueUsers = Array.from(new Map(users.map(u => [u.userId, u])).values());
+      setOnlineUsers(uniqueUsers);
+    }).subscribe(async (status) => {
+      if (status === 'SUBSCRIBED') {
+         await room.track({
+           userId: user.id,
+           username: profile.username || 'Unnamed Soul',
+           role: profile.role || 'user'
+         });
+      }
+    });
+    
+    return () => {
+       supabase.removeChannel(room);
+    }
+  }, [profile, user]);
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      const { data } = await supabase
+        .from('messages')
+        .select('*, profiles(username, role)')
+        .eq('channel', activeChannel)
+        .order('created_at', { ascending: true });
+      
+      if (data) setMessages(data);
+    };
+
     fetchMessages();
 
     // Subscribe to new messages
@@ -43,13 +90,15 @@ export default function Chat({ user, profile }: { user: any, profile: any }) {
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim() || !user) return;
+    if ((!input.trim() && !mediaUrl.trim()) || !user) return;
     
     await supabase.from('messages').insert([
-      { channel: activeChannel, user_id: user.id, message: input }
+      { channel: activeChannel, user_id: user.id, message: input, media_url: mediaUrl || null }
     ]);
     
     setInput('');
+    setMediaUrl('');
+    setShowMediaInput(false);
   };
 
   const formatTime = (isoString: string) => {
@@ -66,21 +115,27 @@ export default function Chat({ user, profile }: { user: any, profile: any }) {
         <div style={{ width: '250px', borderRight: '1px solid var(--color-earth)', paddingRight: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <h4 style={{ color: 'var(--color-bronze)' }}>Channels</h4>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <button onClick={() => setActiveChannel('general')} style={{ ...channelBtnStyle, color: activeChannel === 'general' ? 'var(--color-gold-radiant)' : 'var(--text-secondary)', background: activeChannel === 'general' ? 'rgba(255, 204, 0, 0.1)' : 'transparent' }}><Hash size={16}/> general</button>
-            <button onClick={() => setActiveChannel('enochian-time')} style={{ ...channelBtnStyle, color: activeChannel === 'enochian-time' ? 'var(--color-gold-radiant)' : 'var(--text-secondary)', background: activeChannel === 'enochian-time' ? 'rgba(255, 204, 0, 0.1)' : 'transparent' }}><Hash size={16}/> enochian-time</button>
-            <button onClick={() => setActiveChannel('music-discussion')} style={{ ...channelBtnStyle, color: activeChannel === 'music-discussion' ? 'var(--color-gold-radiant)' : 'var(--text-secondary)', background: activeChannel === 'music-discussion' ? 'rgba(255, 204, 0, 0.1)' : 'transparent' }}><Hash size={16}/> music-discussion</button>
+            {channels.length > 0 ? channels.map(c => (
+              <button key={c.id} onClick={() => setActiveChannel(c.name)} style={{ ...channelBtnStyle, color: activeChannel === c.name ? 'var(--color-gold-radiant)' : 'var(--text-secondary)', background: activeChannel === c.name ? 'rgba(255, 204, 0, 0.1)' : 'transparent' }}>
+                <Hash size={16}/> {c.name}
+              </button>
+            )) : (
+              <button onClick={() => setActiveChannel('general')} style={{ ...channelBtnStyle, color: activeChannel === 'general' ? 'var(--color-gold-radiant)' : 'var(--text-secondary)', background: activeChannel === 'general' ? 'rgba(255, 204, 0, 0.1)' : 'transparent' }}>
+                 <Hash size={16}/> general
+              </button>
+            )}
           </div>
           
           <h4 style={{ color: 'var(--color-bronze)', marginTop: '2rem' }}>Online</h4>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            {profile && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-                <div style={{ width: '8px', height: '8px', background: '#00ff00', borderRadius: '50%' }}></div> You ({profile.username})
-              </div>
-            )}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-              <div style={{ width: '8px', height: '8px', background: '#00ff00', borderRadius: '50%' }}></div> Darak iBar <Crown size={12} color="var(--color-gold-radiant)"/>
-            </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.7rem' }}>
+             {onlineUsers.map(u => (
+               <div key={u.userId} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: u.userId === user?.id ? 'var(--color-gold-radiant)' : 'var(--color-parchment)', fontSize: '0.9rem' }}>
+                 <div style={{ width: '8px', height: '8px', background: '#00ff00', borderRadius: '50%', boxShadow: '0 0 5px #00ff00' }}></div> 
+                 {u.username} 
+                 {u.userId === user?.id && <span style={{ color: 'var(--text-secondary)', fontSize: '0.8rem' }}>(You)</span>}
+                 {u.role === 'admin' && <Crown size={12} color="var(--color-gold-radiant)"/>}
+               </div>
+             ))}
           </div>
         </div>
 
@@ -111,7 +166,12 @@ export default function Chat({ user, profile }: { user: any, profile: any }) {
                       </span>
                       <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{formatTime(msg.created_at)}</span>
                     </div>
-                    <p style={{ color: 'var(--text-primary)', marginTop: '0.25rem', lineHeight: '1.5' }}>{msg.message}</p>
+                    {msg.message && <p style={{ color: 'var(--text-primary)', marginTop: '0.25rem', lineHeight: '1.5' }}>{msg.message}</p>}
+                    {msg.media_url && (
+                      <div style={{ marginTop: '0.8rem', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--color-earth)', maxWidth: '300px' }}>
+                        <img src={msg.media_url} alt="Transmission media" style={{ width: '100%', height: 'auto', display: 'block' }} />
+                      </div>
+                    )}
                   </div>
                 </div>
               );
@@ -119,21 +179,29 @@ export default function Chat({ user, profile }: { user: any, profile: any }) {
             <div ref={messagesEndRef} />
           </div>
 
-          <form onSubmit={handleSend} style={{ marginTop: '1rem', display: 'flex', gap: '1rem', alignItems: 'center', background: 'rgba(0,0,0,0.8)', padding: '0.5rem 1rem', borderRadius: '12px', border: '1px solid var(--color-gold-radiant)' }}>
-            <button type="button" style={{ background: 'transparent', border: 'none', color: 'var(--color-bronze)', cursor: 'pointer', padding: '0.5rem' }}>
-              <Paperclip size={20} />
-            </button>
-            <input 
-              type="text" 
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder={`Contribute to #${activeChannel}...`}
-              style={{ flex: 1, background: 'transparent', border: 'none', color: 'var(--color-gold-radiant)', outline: 'none', fontSize: '1.05rem', fontFamily: 'var(--font-ui)' }}
-            />
-            <button type="submit" style={{ background: 'transparent', border: 'none', color: 'var(--color-gold-radiant)', cursor: 'pointer', padding: '0.5rem' }}>
-              <Send size={20} />
-            </button>
-          </form>
+          <div style={{ marginTop: '1rem', background: 'rgba(0,0,0,0.8)', borderRadius: '12px', border: '1px solid var(--color-gold-radiant)', overflow: 'hidden' }}>
+            {showMediaInput && (
+               <div style={{ padding: '0.5rem 1rem', background: 'rgba(20,20,18,0.9)', borderBottom: '1px solid var(--color-earth)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <Image size={16} color="var(--color-bronze)" />
+                  <input type="url" value={mediaUrl} onChange={e => setMediaUrl(e.target.value)} placeholder="https://... (Attach Image URL)" style={{ flex: 1, background: 'transparent', border: 'none', color: 'var(--color-parchment)', outline: 'none', fontSize: '0.9rem' }} />
+               </div>
+            )}
+            <form onSubmit={handleSend} style={{ display: 'flex', gap: '1rem', alignItems: 'center', padding: '0.5rem 1rem' }}>
+              <button type="button" onClick={() => setShowMediaInput(!showMediaInput)} style={{ background: 'transparent', border: 'none', color: showMediaInput ? 'var(--color-gold-radiant)' : 'var(--color-bronze)', cursor: 'pointer', padding: '0.5rem' }}>
+                <Paperclip size={20} />
+              </button>
+              <input 
+                type="text" 
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder={`Contribute to #${activeChannel}...`}
+                style={{ flex: 1, background: 'transparent', border: 'none', color: 'var(--color-gold-radiant)', outline: 'none', fontSize: '1.05rem', fontFamily: 'var(--font-ui)' }}
+              />
+              <button type="submit" disabled={(!input.trim() && !mediaUrl.trim())} style={{ background: 'transparent', border: 'none', color: (!input.trim() && !mediaUrl.trim()) ? 'var(--color-earth)' : 'var(--color-gold-radiant)', cursor: (!input.trim() && !mediaUrl.trim()) ? 'not-allowed' : 'pointer', padding: '0.5rem' }}>
+                <Send size={20} />
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </div>

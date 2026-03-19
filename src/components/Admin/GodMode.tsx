@@ -23,6 +23,18 @@ export default function GodMode({ user, profile }: { user: any, profile?: any })
   const [cLoading, setCLoading] = useState(false);
   const [cMsg, setCMsg] = useState('');
 
+  // Roadmap
+  const [rTitle, setRTitle] = useState('');
+  const [rStatus, setRStatus] = useState('tba');
+  const [rLoading, setRLoading] = useState(false);
+  const [rMsg, setRMsg] = useState('');
+
+  // Channel
+  const [chName, setChName] = useState('');
+  const [chDesc, setChDesc] = useState('');
+  const [chLoading, setChLoading] = useState(false);
+  const [chMsg, setChMsg] = useState('');
+
   if (!user || profile?.role !== 'admin') {
     return (
       <div className="page-container" style={{ textAlign: 'center', marginTop: '4rem' }}>
@@ -54,6 +66,22 @@ export default function GodMode({ user, profile }: { user: any, profile?: any })
     if (error) setCMsg('Error: ' + error.message);
     else { setCMsg('Epoch properly overloaded.'); setCDate(''); setCTitle(''); setCDesc(''); }
     setCLoading(false);
+  };
+
+  const handlePushRoadmap = async () => {
+    setRLoading(true); setRMsg('');
+    const { error } = await supabase.from('app_roadmap').insert([{ title: rTitle, status: rStatus }]);
+    if (error) setRMsg('Error: ' + error.message);
+    else { setRMsg('Roadmap updated successfully.'); setRTitle(''); }
+    setRLoading(false);
+  };
+
+  const handlePushChannel = async () => {
+    setChLoading(true); setChMsg('');
+    const { error } = await supabase.from('app_channels').insert([{ name: chName, description: chDesc }]);
+    if (error) setChMsg('Error: ' + error.message);
+    else { setChMsg('Channel established successfully.'); setChName(''); setChDesc(''); }
+    setChLoading(false);
   };
 
   return (
@@ -131,6 +159,39 @@ export default function GodMode({ user, profile }: { user: any, profile?: any })
           {cMsg && <p style={{ color: cMsg.includes('Error') ? '#ffaaaa' : 'var(--color-gold-radiant)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>{cMsg.includes('Error') ? <AlertCircle size={14}/> : <CheckCircle size={14}/>} {cMsg}</p>}
           <button onClick={handlePushCalendar} disabled={cLoading || !cDate || !cTitle} className="btn btn-secondary" style={{ width: '100%' }}>
             {cLoading ? 'Injecting...' : 'Engage Event'}
+          </button>
+        </div>
+
+        {/* Premium Roadmap Panel */}
+        <div className="glass-panel" style={{ borderTop: '4px solid var(--color-brass)' }}>
+          <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}><Megaphone size={24}/> Premium Roadmap Override</h3>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1rem' }}>Configure upcoming Treasury content drops.</p>
+          
+          <input type="text" placeholder="Drop Title" value={rTitle} onChange={e => setRTitle(e.target.value)} required style={{ width: '100%', padding: '10px', background: 'rgba(0,0,0,0.6)', border: '1px solid var(--color-earth)', color: 'var(--text-primary)', marginBottom: '1rem', borderRadius: '8px' }} />
+          <select value={rStatus} onChange={e => setRStatus(e.target.value)} style={{ width: '100%', padding: '10px', background: 'rgba(0,0,0,0.6)', border: '1px solid var(--color-earth)', color: 'var(--color-parchment)', marginBottom: '1rem', borderRadius: '8px', cursor: 'pointer' }}>
+            <option value="soon">SOON</option>
+            <option value="tba">TBA</option>
+            <option value="live">LIVE</option>
+            <option value="planned">PLANNED</option>
+          </select>
+          
+          {rMsg && <p style={{ color: rMsg.includes('Error') ? '#ffaaaa' : 'var(--color-gold-radiant)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>{rMsg}</p>}
+          <button onClick={handlePushRoadmap} disabled={rLoading || !rTitle} className="btn btn-secondary" style={{ width: '100%' }}>
+            {rLoading ? 'Injecting...' : 'Add to Roadmap'}
+          </button>
+        </div>
+
+        {/* Codex Channel Panel */}
+        <div className="glass-panel" style={{ borderTop: '4px solid var(--gold)' }}>
+          <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}><Upload size={24}/> Codex Frequency Channels</h3>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1rem' }}>Establish new communication arrays in the Codex.</p>
+          
+          <input type="text" placeholder="Channel Name (e.g. general)" value={chName} onChange={e => setChName(e.target.value)} required style={{ width: '100%', padding: '10px', background: 'rgba(0,0,0,0.6)', border: '1px solid var(--color-earth)', color: 'var(--text-primary)', marginBottom: '1rem', borderRadius: '8px' }} />
+          <textarea placeholder="Channel Purpose..." value={chDesc} onChange={e => setChDesc(e.target.value)} style={{ width: '100%', minHeight: '60px', background: 'rgba(0,0,0,0.6)', border: '1px solid var(--color-earth)', borderRadius: '8px', color: 'var(--color-parchment)', padding: '15px', fontFamily: 'inherit', resize: 'vertical', marginBottom: '1rem' }} />
+          
+          {chMsg && <p style={{ color: chMsg.includes('Error') ? '#ffaaaa' : 'var(--color-gold-radiant)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>{chMsg}</p>}
+          <button onClick={handlePushChannel} disabled={chLoading || !chName} className="btn btn-secondary" style={{ width: '100%' }}>
+            {chLoading ? 'Establishing...' : 'Create Frequency'}
           </button>
         </div>
 

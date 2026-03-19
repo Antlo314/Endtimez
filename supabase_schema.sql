@@ -114,3 +114,30 @@ create policy "Videos viewable by everyone." on app_videos for select using (tru
 create policy "Only admins can modify videos." on app_videos for all using (
   exists (select 1 from profiles where id = auth.uid() and role = 'admin')
 );
+
+-- 6. Codex Channels & Premium Roadmap
+create table public.app_channels (
+  id uuid default uuid_generate_v4() primary key,
+  name text unique not null,
+  description text,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+alter table public.app_channels enable row level security;
+create policy "Channels viewable by everyone." on app_channels for select using (true);
+create policy "Only admins can modify channels." on app_channels for all using (
+  exists (select 1 from profiles where id = auth.uid() and role = 'admin')
+);
+
+create table public.app_roadmap (
+  id uuid default uuid_generate_v4() primary key,
+  title text not null,
+  status text default 'planned' check (status in ('soon', 'tba', 'live', 'planned')),
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+alter table public.app_roadmap enable row level security;
+create policy "Roadmap viewable by everyone." on app_roadmap for select using (true);
+create policy "Only admins can modify roadmap." on app_roadmap for all using (
+  exists (select 1 from profiles where id = auth.uid() and role = 'admin')
+);

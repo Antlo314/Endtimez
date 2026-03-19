@@ -24,17 +24,15 @@ export default function Login() {
         navigate('/profile');
       } else {
         // Sign Up
-        const { data: authData, error: authError } = await supabase.auth.signUp({ email, password });
+        const { error: authError } = await supabase.auth.signUp({ 
+          email, 
+          password,
+          options: {
+            data: { username: spiritualName }
+          }
+        });
         if (authError) throw authError;
 
-        if (authData.user) {
-          // Creating profile
-          const { error: profileError } = await supabase.from('profiles').insert([
-            { id: authData.user.id, username: spiritualName, avatar_url: '/assets/images/avatar_mock.png' }
-          ]);
-          if (profileError) throw profileError;
-        }
-        
         navigate('/profile');
       }
     } catch (err: any) {
