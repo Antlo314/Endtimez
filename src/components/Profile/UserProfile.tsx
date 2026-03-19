@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Upload, Crown, Music, Megaphone, Calendar as CalendarIcon, ArrowRight } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 
-export default function UserProfile({ user, profile, onProfileUpdate }: { user: any, profile: any, onProfileUpdate: (id: string) => void }) {
+export default function UserProfile({ user, profile, onProfileUpdate }: { user: any, profile: any, onProfileUpdate: (user: any) => void }) {
   const [bio, setBio] = useState('');
   const [username, setUsername] = useState('');
   const [avatarUrl, setAvatarUrl] = useState('');
@@ -81,7 +81,7 @@ export default function UserProfile({ user, profile, onProfileUpdate }: { user: 
       alert('Failed to update records: ' + error.message);
     } else {
       alert('Sanctum records successfully updated.');
-      onProfileUpdate(user.id);
+      onProfileUpdate(user);
     }
     setSaving(false);
   };
