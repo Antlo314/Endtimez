@@ -56,8 +56,8 @@ export default function Store() {
       {/* Hero Album - MIDNIGHT */}
       <div className="glass-panel hero-album" style={{ display: 'flex', gap: '3rem', marginTop: '2rem', alignItems: 'center', padding: '3rem', position: 'relative', overflow: 'hidden', isolation: 'isolate', border: 'none' }}>
         <video autoPlay loop muted playsInline style={{ 
-          position: 'absolute', top: '50%', left: '50%', width: '150%', height: '150%', transform: 'translate(-50%, -50%)',
-          objectFit: 'cover', zIndex: -1, opacity: 0.65, pointerEvents: 'none',
+          position: 'absolute', top: '50%', left: '50%', width: '100%', height: '100%', transform: 'translate(-50%, -50%)',
+          objectFit: 'contain', zIndex: -1, opacity: 0.65, pointerEvents: 'none',
           mixBlendMode: 'screen',
           WebkitMaskImage: 'radial-gradient(circle at top right, black 20%, transparent 70%)',
           maskImage: 'radial-gradient(circle at top right, black 20%, transparent 70%)'
