@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Upload, Megaphone, CalendarPlus, CheckCircle, AlertCircle } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 
-export default function GodMode({ user }: { user: any, profile?: any }) {
+export default function GodMode({ user, profile }: { user: any, profile?: any }) {
   // Bulletin
   const [bTitle, setBTitle] = useState('');
   const [bContent, setBContent] = useState('');
@@ -16,11 +16,11 @@ export default function GodMode({ user }: { user: any, profile?: any }) {
   const [vLoading, setVLoading] = useState(false);
   const [vMsg, setVMsg] = useState('');
 
-  if (!user || user.role !== 'admin') {
+  if (!user || profile?.role !== 'admin') {
     return (
       <div className="page-container" style={{ textAlign: 'center', marginTop: '4rem' }}>
         <h2 style={{ color: 'var(--red)' }}>ACCESS DENIED</h2>
-        <p>You do not have God Mode clearance.</p>
+        <p>You do not have The Prophet's Watch clearance.</p>
       </div>
     );
   }
@@ -44,7 +44,7 @@ export default function GodMode({ user }: { user: any, profile?: any }) {
   return (
     <div className="page-container fade-in">
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem' }}>
-        <h2 className="glitch" data-text="God Mode Controls" style={{ fontSize: '2.5rem' }}>God Mode Controls</h2>
+        <h2 className="glitch" data-text="The Prophet's Watch" style={{ fontSize: '2.5rem' }}>The Prophet's Watch</h2>
         <span style={{ background: 'var(--color-gold-radiant)', color: 'var(--color-obsidian)', padding: '5px 15px', borderRadius: '20px', fontWeight: 'bold' }}>LIVE</span>
       </div>
 

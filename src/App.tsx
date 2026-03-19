@@ -29,7 +29,7 @@ function Navigation({ user, profile }: { user: any, profile: any }) {
         <Link to="/music"><Music size={18}/> Hymns</Link>
         <Link to="/teachings"><BookOpen size={18}/> Vault</Link>
         {profile?.role === 'admin' && (
-          <Link to="/admin" className="accent-link"><Crown size={18}/> God Mode</Link>
+          <Link to="/admin" className="accent-link"><Crown size={18}/> The Prophet's Watch</Link>
         )}
       </div>
     </nav>
