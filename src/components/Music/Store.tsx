@@ -7,6 +7,9 @@ export default function Store() {
   const [albums, setAlbums] = useState<any[]>([]);
   const [singles, setSingles] = useState<any[]>([]);
   const [, setLoading] = useState(true);
+  
+  const [showAllAlbums, setShowAllAlbums] = useState(false);
+  const [showAllSingles, setShowAllSingles] = useState(false);
 
   useEffect(() => {
     const fetchCatalog = async () => {
@@ -69,11 +72,14 @@ export default function Store() {
         
         {/* Albums Collection */}
         <div>
-          <h3 style={{ borderBottom: '1px solid var(--color-earth)', paddingBottom: '1rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Disc size={24} color="var(--color-bronze)" /> Complete Works
-          </h3>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--color-earth)', paddingBottom: '1rem', marginBottom: '1.5rem' }}>
+            <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', margin: 0 }}>
+              <Disc size={24} color="var(--color-bronze)" /> Complete Works
+            </h3>
+            <button onClick={() => setShowAllAlbums(!showAllAlbums)} className="btn btn-secondary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem' }}>{showAllAlbums ? 'Collapse' : 'Show All'}</button>
+          </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            {albums.map(album => (
+            {(showAllAlbums ? albums : albums.slice(0, 3)).map(album => (
               <div key={album.id} style={{ display: 'flex', gap: '1rem', alignItems: 'center', background: 'rgba(0,0,0,0.6)', padding: '1rem', borderRadius: '8px', border: '1px solid rgba(255,204,0,0.2)', cursor: 'pointer', transition: 'var(--transition-smooth)' }} className="album-card">
                 <img src={album.cover_url || '/assets/images/midnight_cover.png'} alt={album.title} style={{ width: '80px', height: '80px', borderRadius: '8px', border: '1px solid var(--color-earth)' }} />
                 <div style={{ flex: 1 }}>
@@ -88,11 +94,14 @@ export default function Store() {
 
         {/* Singles & Snippets */}
         <div className="glass-panel" style={{ padding: '2.5rem' }}>
-          <h3 style={{ borderBottom: '1px solid var(--color-earth)', paddingBottom: '1rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <MusicIcon size={24} color="var(--color-bronze)" /> Singles & Snippets
-          </h3>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--color-earth)', paddingBottom: '1rem', marginBottom: '1.5rem' }}>
+            <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', margin: 0 }}>
+              <MusicIcon size={24} color="var(--color-bronze)" /> Singles & Snippets
+            </h3>
+            <button onClick={() => setShowAllSingles(!showAllSingles)} className="btn btn-secondary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem' }}>{showAllSingles ? 'Collapse' : 'Show All'}</button>
+          </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            {singles.map((song, i) => (
+            {(showAllSingles ? singles : singles.slice(0, 4)).map((song, i) => (
               <div key={song.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem', borderBottom: '1px solid var(--color-earth)', transition: 'background 0.2s' }} className="track-row">
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: 1 }}>
                   <span style={{ color: 'var(--text-secondary)', width: '20px' }}>{i + 1}</span>

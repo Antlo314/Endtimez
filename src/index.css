@@ -642,5 +642,61 @@ section, .page-container {
   .calendar-matrix span {
     font-size: 0.7rem !important;
   }
+
+  /* Vault & Hymns Mini Configurations */
+  .vault-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+  .vault-card {
+    flex-direction: row !important;
+    height: 110px !important;
+    padding: 0 !important;
+  }
+  .thumbnail-container {
+    width: 140px !important;
+    height: 100% !important;
+    flex-shrink: 0;
+  }
+  .info-container {
+    padding: 0.8rem !important;
+    justify-content: center !important;
+  }
+  .info-container h3 {
+    font-size: 0.85rem !important;
+    margin-bottom: 0.3rem !important;
+  }
+  .info-container p {
+    display: none !important;
+  }
+  .info-container .btn {
+    padding: 0.4rem !important;
+    font-size: 0.75rem !important;
+    margin-top: auto;
+  }
+  
+  .hero-album {
+    flex-direction: column !important;
+    gap: 1.5rem !important;
+    padding: 1.5rem !important;
+    text-align: center;
+  }
+  .hero-album img {
+    width: 200px !important;
+    height: 200px !important;
+  }
+  .hero-album h1 {
+    font-size: 2.5rem !important;
+  }
+  .track-row {
+    padding: 0.8rem 0.2rem !important;
+  }
+  .track-row span {
+    font-size: 0.85rem !important;
+  }
+  .track-row .btn {
+    padding: 0.4rem 0.6rem !important;
+    font-size: 0.75rem !important;
+  }
 }
 

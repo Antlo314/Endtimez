@@ -6,6 +6,10 @@ export default function Teachings({ user }: { user: any, profile?: any }) {
   const [dynRecent, setDynRecent] = useState<any[]>([]);
   const [dynPopular, setDynPopular] = useState<any[]>([]);
   const [dynPremium, setDynPremium] = useState<any[]>([]);
+  
+  const [showAllPopular, setShowAllPopular] = useState(false);
+  const [showAllRecent, setShowAllRecent] = useState(false);
+  const [showAllStudy, setShowAllStudy] = useState(false);
 
   useEffect(() => {
     supabase.from('app_videos').select('*').order('created_at', { ascending: false })
@@ -112,21 +116,30 @@ export default function Teachings({ user }: { user: any, profile?: any }) {
 
       <div style={{ width: '100%' }}>
         {/* Popular Videos Row (UNLOCKED) */}
-        <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-color)', marginBottom: '1.5rem', fontSize: '1.5rem', textAlign: 'left' }}><TrendingUp size={24} color="var(--gold)"/> Most Viewed Wisdom</h3>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+          <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-color)', fontSize: '1.5rem' }}><TrendingUp size={24} color="var(--gold)"/> Most Viewed Wisdom</h3>
+          <button onClick={() => setShowAllPopular(!showAllPopular)} className="btn btn-secondary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem' }}>{showAllPopular ? 'Collapse' : 'Show All'}</button>
+        </div>
         <div className="vault-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '2rem', marginBottom: '4rem' }}>
-          {[...dynPopular, ...popularReleases].map(v => renderVideoCard(v, false))}
+          {(showAllPopular ? [...dynPopular, ...popularReleases] : [...dynPopular, ...popularReleases].slice(0, 3)).map(v => renderVideoCard(v, false))}
         </div>
 
         {/* Recent Videos Row (UNLOCKED) */}
-        <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-color)', marginBottom: '1.5rem', fontSize: '1.5rem', textAlign: 'left' }}><Clock size={24} color="var(--gold)"/> Latest Prophetic Releases</h3>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+          <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-color)', fontSize: '1.5rem' }}><Clock size={24} color="var(--gold)"/> Latest Prophetic Releases</h3>
+          <button onClick={() => setShowAllRecent(!showAllRecent)} className="btn btn-secondary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem' }}>{showAllRecent ? 'Collapse' : 'Show All'}</button>
+        </div>
         <div className="vault-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '2rem', marginBottom: '4rem' }}>
-          {[...dynRecent, ...recentReleases].map(v => renderVideoCard(v, false))}
+          {(showAllRecent ? [...dynRecent, ...recentReleases] : [...dynRecent, ...recentReleases].slice(0, 3)).map(v => renderVideoCard(v, false))}
         </div>
         
         {/* Additional Vault Resources */}
-        <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-color)', marginBottom: '1.5rem', fontSize: '1.5rem', textAlign: 'left' }}>Foundational Study</h3>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+          <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-color)', fontSize: '1.5rem' }}>Foundational Study</h3>
+          <button onClick={() => setShowAllStudy(!showAllStudy)} className="btn btn-secondary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem' }}>{showAllStudy ? 'Collapse' : 'Show All'}</button>
+        </div>
         <div className="vault-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '2rem', marginBottom: '4rem' }}>
-          {freeVideos.map(v => renderVideoCard(v, false))}
+          {(showAllStudy ? freeVideos : freeVideos.slice(0, 3)).map(v => renderVideoCard(v, false))}
         </div>
       </div>
 
