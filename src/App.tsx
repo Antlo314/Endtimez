@@ -82,10 +82,10 @@ function Home({ user }: { user: any }) {
   if (user) return <Navigate to="/profile" />;
 
   return (
-    <main style={{ position: 'relative', minHeight: '100vh', overflow: 'hidden' }}>
+    <main style={{ position: 'relative', minHeight: '100vh', overflow: 'hidden', isolation: 'isolate' }}>
       <video 
         autoPlay loop muted playsInline 
-        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: -1, opacity: 0.5 }}
+        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: -1, opacity: 0.6 }}
       >
         <source src="/assets/videos/lastdayz_2027.mp4" type="video/mp4" />
       </video>
