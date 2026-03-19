@@ -110,12 +110,13 @@ export default function Teachings({ user }: { user: any, profile?: any }) {
           autoPlay loop muted playsInline 
           style={{ 
             width: '100%', 
-            height: '400px', 
-            objectFit: 'cover', 
+            maxHeight: '60vh', 
+            objectFit: 'contain', 
             borderRadius: '12px',
             border: '1px solid var(--gold)',
             boxShadow: '0 8px 32px rgba(212, 175, 55, 0.1)',
-            marginBottom: '2rem'
+            marginBottom: '2rem',
+            backgroundColor: 'rgba(0,0,0,0.5)'
           }}
         >
           <source src="/assets/videos/lastdayz_2027.mp4" type="video/mp4" />

@@ -30,6 +30,23 @@ export default function TrueCalendar() {
 
   return (
     <div className="page-container fade-in">
+      <div style={{ width: '100%', marginBottom: '2rem' }}>
+        <video 
+          autoPlay loop muted playsInline 
+          style={{ 
+            width: '100%', 
+            maxHeight: '60vh', 
+            objectFit: 'contain', 
+            borderRadius: '12px',
+            border: '1px solid var(--gold)',
+            boxShadow: '0 8px 32px rgba(212, 175, 55, 0.1)',
+            backgroundColor: 'rgba(0,0,0,0.5)'
+          }}
+        >
+          <source src="/assets/videos/endtimezmuzik.mp4" type="video/mp4" />
+        </video>
+      </div>
+
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h2 className="glitch" data-text="The True Calendar">The True Calendar</h2>
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', color: 'var(--color-gold-radiant)' }}>
