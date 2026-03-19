@@ -47,7 +47,7 @@ export default function TrueCalendar() {
             <button onClick={handleNextMonth} className="btn btn-secondary" style={{ padding: '0.5rem', cursor: 'pointer' }}><ChevronRight /></button>
           </div>
           
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '10px', textAlign: 'center' }}>
+          <div className="calendar-matrix" style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '10px', textAlign: 'center' }}>
             {['1st', '2nd', '3rd', '4th', '5th', '6th', 'Sabbath'].map(day => (
               <div key={day} style={{ color: 'var(--color-bronze)', fontWeight: 'bold', paddingBottom: '10px', borderBottom: '1px solid var(--color-earth)' }}>
                 {day}

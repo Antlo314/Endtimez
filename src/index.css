@@ -620,5 +620,26 @@ section, .page-container {
     padding: 15px 30px;
     font-size: 0.8rem;
   }
+
+  .sanctum-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+  .admin-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .store-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .calendar-matrix {
+    gap: 4px !important;
+  }
+  .calendar-matrix > div {
+    font-size: 0.75rem !important;
+    padding: 4px !important;
+  }
+  .calendar-matrix span {
+    font-size: 0.85rem !important;
+  }
 }
 

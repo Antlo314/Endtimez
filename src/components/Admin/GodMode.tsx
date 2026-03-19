@@ -91,7 +91,7 @@ export default function GodMode({ user, profile }: { user: any, profile?: any })
         <span style={{ background: 'var(--color-gold-radiant)', color: 'var(--color-obsidian)', padding: '5px 15px', borderRadius: '20px', fontWeight: 'bold' }}>LIVE</span>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '2rem' }}>
+      <div className="admin-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '2rem' }}>
         
         {/* Global Bulletin Panel */}
         <div className="glass-panel" style={{ borderTop: '4px solid var(--color-gold-radiant)' }}>

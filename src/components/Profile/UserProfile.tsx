@@ -99,7 +99,7 @@ export default function UserProfile({ user, profile, onProfileUpdate }: { user: 
         )}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '2rem', width: '100%' }}>
+      <div className="sanctum-grid" style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '2rem', width: '100%' }}>
         
         {/* LEFT COLUMN: Sanctum Bulletin & Premium Updates */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
