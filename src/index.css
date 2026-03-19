@@ -569,6 +569,8 @@ section, .page-container {
     padding-right: 15px;
     height: auto !important;
     min-height: 100vh;
+    max-width: 100% !important; /* Cap global horizontal expansion */
+    overflow-x: hidden;
   }
 
   /* Codex Mobile Adjustments */
@@ -590,9 +592,10 @@ section, .page-container {
   }
 
   .glass-panel {
-    padding: 30px 20px;
+    padding: 30px 15px;
     width: 100% !important;
-    max-width: 100vw !important;
+    max-width: 100% !important; /* Swap 100vw to 100% to obey parent padding */
+    box-sizing: border-box;
   }
   
   .glass-panel h2 {
@@ -600,7 +603,9 @@ section, .page-container {
   }
   
   .glitch {
-    font-size: 2.2rem !important;
+    font-size: 1.6rem !important; /* Kill the 2.2rem blowout */
+    word-break: break-word;
+    white-space: normal;
   }
   
   .hero-content h1 {
@@ -617,8 +622,10 @@ section, .page-container {
   }
   
   .btn {
-    padding: 15px 30px;
-    font-size: 0.8rem;
+    padding: 12px 15px; /* Decrease side padding significantly for wrap capability */
+    font-size: 0.75rem;
+    white-space: normal;
+    text-align: center;
   }
 
   .sanctum-grid {
@@ -689,14 +696,19 @@ section, .page-container {
     font-size: 2.5rem !important;
   }
   .track-row {
-    padding: 0.8rem 0.2rem !important;
+    padding: 0.8rem 0 !important; /* Remove lateral padding on tight screens */
+    flex-wrap: wrap !important; /* Allow internal items to stack if crushed */
+    gap: 0.5rem !important;
   }
   .track-row span {
     font-size: 0.85rem !important;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
   .track-row .btn {
     padding: 0.4rem 0.6rem !important;
     font-size: 0.75rem !important;
+    min-width: unset !important;
   }
 }
 

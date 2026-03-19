@@ -70,9 +70,9 @@ export default function Store() {
           <h1 style={{ fontSize: '4rem', margin: '0', lineHeight: 1 }}>MIDNIGHT</h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', margin: '1rem 0 2rem' }}>The definitive soundtrack to the Endtimes.</p>
           
-          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-            <button className="btn btn-primary" style={{ flex: '1 1 auto', minWidth: '200px' }}><Disc size={20} /> Pre-order / Buy Album ($14.99)</button>
-            <button className="btn btn-secondary" style={{ flex: '1 1 auto', minWidth: '200px' }}><Play size={20} /> Preview All Snippets</button>
+          <div style={{ display: 'flex', gap: '0.8rem', flexWrap: 'wrap', justifyContent: 'center', width: '100%' }}>
+            <button className="btn btn-primary" style={{ flex: '1 1 auto' }}><Disc size={20} /> Pre-order / Buy Album ($14.99)</button>
+            <button className="btn btn-secondary" style={{ flex: '1 1 auto' }}><Play size={20} /> Preview All Snippets</button>
           </div>
         </div>
       </div>
@@ -111,8 +111,8 @@ export default function Store() {
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {(showAllSingles ? singles : singles.slice(0, 4)).map((song, i) => (
-              <div key={song.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem', borderBottom: '1px solid var(--color-earth)', transition: 'background 0.2s' }} className="track-row">
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: 1 }}>
+              <div key={song.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem', flexWrap: 'wrap', borderBottom: '1px solid var(--color-earth)', transition: 'background 0.2s' }} className="track-row">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: '1 1 100%' }}>
                   <span style={{ color: 'var(--text-secondary)', width: '20px' }}>{i + 1}</span>
                   <button 
                     onClick={() => setPlayingId(playingId === song.id ? null : song.id)}
@@ -122,8 +122,10 @@ export default function Store() {
                   </button>
                   <span style={{ color: 'var(--text-primary)', fontWeight: playingId === song.id ? 'bold' : 'normal' }}>{song.title}</span>
                 </div>
-                <div style={{ color: 'var(--text-secondary)', width: '60px', textAlign: 'right', paddingRight: '1rem' }}>{song.duration || '0:00'}</div>
-                <button className="btn btn-secondary" style={{ padding: '0.4rem 1rem', fontSize: '0.85rem' }}>${Number(song.price).toFixed(2)}</button>
+                <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', marginTop: '0.5rem', alignItems: 'center' }}>
+                  <div style={{ color: 'var(--text-secondary)', textAlign: 'left', paddingLeft: '2.5rem' }}>{song.duration || '0:00'}</div>
+                  <button className="btn btn-secondary" style={{ padding: '0.4rem 1rem', fontSize: '0.85rem' }}>${Number(song.price).toFixed(2)}</button>
+                </div>
               </div>
             ))}
           </div>
