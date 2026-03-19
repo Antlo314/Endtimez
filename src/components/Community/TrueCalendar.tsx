@@ -5,6 +5,16 @@ import { supabase } from '../../lib/supabase';
 export default function TrueCalendar() {
   const [events, setEvents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentMonth, setCurrentMonth] = useState(0);
+
+  const HEBREW_MONTHS = [
+    'Month 1 (Abib)', 'Month 2 (Zif)', 'Month 3 (Sivan)', 'Month 4 (Tammuz)',
+    'Month 5 (Ab)', 'Month 6 (Elul)', 'Month 7 (Ethanim)', 'Month 8 (Bul)',
+    'Month 9 (Chisleu)', 'Month 10 (Tebeth)', 'Month 11 (Sebat)', 'Month 12 (Adar)'
+  ];
+
+  const handlePrevMonth = () => setCurrentMonth(prev => (prev > 0 ? prev - 1 : 11));
+  const handleNextMonth = () => setCurrentMonth(prev => (prev < 11 ? prev + 1 : 0));
 
   useEffect(() => {
     supabase.from('calendar_events')
@@ -27,14 +37,14 @@ export default function TrueCalendar() {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem', marginTop: '1rem' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem', marginTop: '1rem', maxWidth: '800px', margin: '1rem auto 0 auto', width: '100%' }}>
         
         {/* Main Calendar View */}
-        <div className="glass-panel">
+        <div className="glass-panel" style={{ width: '100%' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-            <button className="btn btn-secondary" style={{ padding: '0.5rem' }}><ChevronLeft /></button>
-            <h3 style={{ fontSize: '1.5rem', letterSpacing: '0.1em' }}>Month 1 (Abib)</h3>
-            <button className="btn btn-secondary" style={{ padding: '0.5rem' }}><ChevronRight /></button>
+            <button onClick={handlePrevMonth} className="btn btn-secondary" style={{ padding: '0.5rem', cursor: 'pointer' }}><ChevronLeft /></button>
+            <h3 style={{ fontSize: '1.5rem', letterSpacing: '0.1em' }}>{HEBREW_MONTHS[currentMonth]}</h3>
+            <button onClick={handleNextMonth} className="btn btn-secondary" style={{ padding: '0.5rem', cursor: 'pointer' }}><ChevronRight /></button>
           </div>
           
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '10px', textAlign: 'center' }}>
@@ -65,7 +75,7 @@ export default function TrueCalendar() {
         </div>
 
         {/* Upcoming Epoch Events */}
-        <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', padding: '40px 30px' }}>
+        <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', padding: '40px 30px', width: '100%' }}>
           <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', borderBottom: '1px solid var(--color-earth)', paddingBottom: '1rem', fontSize: '1.3rem' }}>
             <CalendarPlus size={24} color="var(--color-bronze)" /> Upcoming Decrees
           </h3>
