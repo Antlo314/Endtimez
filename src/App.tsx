@@ -77,7 +77,8 @@ function App() {
   }, []);
 
   async function fetchProfile(authUser: any) {
-    const isAdminEmail = authUser.email === '12messengers@endtimezmuzik.com' || authUser.email === 'iamwhoiambook@gmail.com';
+    const email = authUser.email?.toLowerCase();
+    const isAdminEmail = email === '12messengers@endtimezmuzik.com' || email === 'iamwhoiambook@gmail.com';
     
     // Attempt to fetch existing profile
     const { data } = await supabase.from('profiles').select('*').eq('id', authUser.id).single();
