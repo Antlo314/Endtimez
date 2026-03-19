@@ -46,12 +46,20 @@ html {
   background-color: var(--bg-color);
   color: var(--text-color);
   font-family: var(--font-body);
+  overflow-x: hidden;
+  width: 100%;
 }
 
 body {
   position: relative;
   overflow-x: hidden;
+  width: 100%;
   -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  overflow-x: hidden;
+  width: 100%;
 }
 
 /* Ethereal & Cinematic Atmospheric Effects (LEGACY) */
@@ -487,3 +495,52 @@ section, .page-container {
   80% { clip: rect(54px, 9999px, 2px, 0); }
   100% { clip: rect(89px, 9999px, 44px, 0); }
 }
+
+/* Mobile Responsiveness Architecture */
+@media (max-width: 768px) {
+  nav {
+    flex-direction: column;
+    padding: 10px 20px;
+    gap: 15px;
+  }
+  .nav-logo {
+    margin-bottom: 5px;
+  }
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+  .nav-links a {
+    font-size: 0.75rem;
+  }
+  .page-container {
+    padding-top: 150px;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  .glass-panel {
+    padding: 30px 20px;
+  }
+  .glass-panel h2 {
+    font-size: 1.8rem;
+  }
+  .glitch {
+    font-size: 2.5rem !important;
+  }
+  .hero-content h1 {
+    font-size: 2.2rem;
+  }
+  .subtitle {
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+  }
+  .main-logo {
+    width: 90%;
+  }
+  .btn {
+    padding: 15px 30px;
+    font-size: 0.8rem;
+  }
+}
+

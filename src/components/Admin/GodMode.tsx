@@ -16,6 +16,13 @@ export default function GodMode({ user, profile }: { user: any, profile?: any })
   const [vLoading, setVLoading] = useState(false);
   const [vMsg, setVMsg] = useState('');
 
+  // Calendar Event
+  const [cDate, setCDate] = useState('');
+  const [cTitle, setCTitle] = useState('');
+  const [cDesc, setCDesc] = useState('');
+  const [cLoading, setCLoading] = useState(false);
+  const [cMsg, setCMsg] = useState('');
+
   if (!user || profile?.role !== 'admin') {
     return (
       <div className="page-container" style={{ textAlign: 'center', marginTop: '4rem' }}>
@@ -39,6 +46,14 @@ export default function GodMode({ user, profile }: { user: any, profile?: any })
     if (error) setVMsg('Error: ' + error.message);
     else { setVMsg('Holy Asset injected into Vault.'); setVTitle(''); setVId(''); }
     setVLoading(false);
+  };
+
+  const handlePushCalendar = async () => {
+    setCLoading(true); setCMsg('');
+    const { error } = await supabase.from('calendar_events').insert([{ event_date: cDate, title: cTitle, description: cDesc }]);
+    if (error) setCMsg('Error: ' + error.message);
+    else { setCMsg('Epoch properly overloaded.'); setCDate(''); setCTitle(''); setCDesc(''); }
+    setCLoading(false);
   };
 
   return (
@@ -104,14 +119,19 @@ export default function GodMode({ user, profile }: { user: any, profile?: any })
           </div>
         </div>
 
-        {/* Calendar Injection (WIP Template) */}
+        {/* Epoch Overload Panel */}
         <div className="glass-panel" style={{ borderTop: '4px solid var(--color-copper)' }}>
           <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}><CalendarPlus size={24}/> Epoch Overload (Calendar)</h3>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1rem' }}>Inject notifications into the True Calendar.</p>
           
-          <input type="date" style={{ width: '100%', padding: '10px', background: 'rgba(0,0,0,0.6)', border: '1px solid var(--color-earth)', color: 'var(--color-parchment)', marginBottom: '1rem', borderRadius: '8px' }} />
-          <input type="text" placeholder="Event Title" style={{ width: '100%', padding: '10px', background: 'rgba(0,0,0,0.6)', border: '1px solid var(--color-earth)', color: 'var(--text-primary)', marginBottom: '1rem', borderRadius: '8px' }} />
-          <button className="btn btn-secondary" style={{ width: '100%' }}>Engage Event (Coming Soon)</button>
+          <input type="date" value={cDate} onChange={e => setCDate(e.target.value)} required style={{ width: '100%', padding: '10px', background: 'rgba(0,0,0,0.6)', border: '1px solid var(--color-earth)', color: 'var(--color-parchment)', marginBottom: '1rem', borderRadius: '8px' }} />
+          <input type="text" placeholder="Event Title" value={cTitle} onChange={e => setCTitle(e.target.value)} required style={{ width: '100%', padding: '10px', background: 'rgba(0,0,0,0.6)', border: '1px solid var(--color-earth)', color: 'var(--text-primary)', marginBottom: '1rem', borderRadius: '8px' }} />
+          <textarea placeholder="Event Description..." value={cDesc} onChange={e => setCDesc(e.target.value)} required style={{ width: '100%', minHeight: '80px', background: 'rgba(0,0,0,0.6)', border: '1px solid var(--color-earth)', borderRadius: '8px', color: 'var(--color-parchment)', padding: '15px', fontFamily: 'inherit', resize: 'vertical', marginBottom: '1rem' }} />
+          
+          {cMsg && <p style={{ color: cMsg.includes('Error') ? '#ffaaaa' : 'var(--color-gold-radiant)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>{cMsg.includes('Error') ? <AlertCircle size={14}/> : <CheckCircle size={14}/>} {cMsg}</p>}
+          <button onClick={handlePushCalendar} disabled={cLoading || !cDate || !cTitle} className="btn btn-secondary" style={{ width: '100%' }}>
+            {cLoading ? 'Injecting...' : 'Engage Event'}
+          </button>
         </div>
 
       </div>
