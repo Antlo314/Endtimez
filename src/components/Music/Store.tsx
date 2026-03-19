@@ -57,7 +57,7 @@ export default function Store() {
       <div className="glass-panel hero-album" style={{ display: 'flex', gap: '3rem', marginTop: '2rem', alignItems: 'center', padding: '3rem', position: 'relative', overflow: 'hidden', isolation: 'isolate', border: 'none' }}>
         <video autoPlay loop muted playsInline style={{ 
           position: 'absolute', top: '50%', left: '50%', width: '150%', height: '150%', transform: 'translate(-50%, -50%)',
-          objectFit: 'contain', zIndex: -1, opacity: 0.25, pointerEvents: 'none',
+          objectFit: 'cover', zIndex: -1, opacity: 0.5, pointerEvents: 'none',
           mixBlendMode: 'screen',
           WebkitMaskImage: 'radial-gradient(circle at top right, black 20%, transparent 70%)',
           maskImage: 'radial-gradient(circle at top right, black 20%, transparent 70%)'
@@ -70,9 +70,9 @@ export default function Store() {
           <h1 style={{ fontSize: '4rem', margin: '0', lineHeight: 1 }}>MIDNIGHT</h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', margin: '1rem 0 2rem' }}>The definitive soundtrack to the Endtimes.</p>
           
-          <div style={{ display: 'flex', gap: '1rem' }}>
-            <button className="btn btn-primary"><Disc size={20} /> Pre-order / Buy Album ($14.99)</button>
-            <button className="btn btn-secondary"><Play size={20} /> Preview All Snippets</button>
+          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <button className="btn btn-primary" style={{ flex: '1 1 auto', minWidth: '200px' }}><Disc size={20} /> Pre-order / Buy Album ($14.99)</button>
+            <button className="btn btn-secondary" style={{ flex: '1 1 auto', minWidth: '200px' }}><Play size={20} /> Preview All Snippets</button>
           </div>
         </div>
       </div>

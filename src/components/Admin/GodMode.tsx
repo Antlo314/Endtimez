@@ -88,17 +88,25 @@ export default function GodMode({ user, profile }: { user: any, profile?: any })
 
   const handlePushBulletin = async () => {
     setBLoading(true); setBMsg('');
-    const { error } = await supabase.from('app_bulletin').insert([{ title: bTitle || 'SYSTEM UPDATE', content: bContent }]);
+    const { data, error } = await supabase.from('app_bulletin').insert([{ title: bTitle || 'SYSTEM UPDATE', content: bContent }]).select();
     if (error) setBMsg('Error: ' + error.message);
-    else { setBMsg('Decree successfully broadcast.'); setBTitle(''); setBContent(''); }
+    else { 
+      setBMsg('Decree successfully broadcast.'); 
+      setBTitle(''); setBContent(''); 
+      if(data) setDbBulletins(prev => [data[0], ...prev]);
+    }
     setBLoading(false);
   };
 
   const handlePushVideo = async () => {
     setVLoading(true); setVMsg('');
-    const { error } = await supabase.from('app_videos').insert([{ title: vTitle, youtube_id: vId, category: vCategory }]);
+    const { data, error } = await supabase.from('app_videos').insert([{ title: vTitle, youtube_id: vId, category: vCategory }]).select();
     if (error) setVMsg('Error: ' + error.message);
-    else { setVMsg('Holy Asset injected into Vault.'); setVTitle(''); setVId(''); }
+    else { 
+      setVMsg('Holy Asset injected into Vault.'); 
+      setVTitle(''); setVId(''); 
+      if(data) setDbVideos(prev => [data[0], ...prev]);
+    }
     setVLoading(false);
   };
 
@@ -133,7 +141,7 @@ export default function GodMode({ user, profile }: { user: any, profile?: any })
         <span style={{ background: 'var(--color-gold-radiant)', color: 'var(--color-obsidian)', padding: '5px 15px', borderRadius: '20px', fontWeight: 'bold' }}>LIVE</span>
       </div>
 
-      <div className="admin-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '2rem' }}>
+      <div className="admin-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem' }}>
         
         {/* Global Bulletin Panel */}
         <div className="glass-panel" style={{ borderTop: '4px solid var(--color-gold-radiant)' }}>
@@ -242,7 +250,7 @@ export default function GodMode({ user, profile }: { user: any, profile?: any })
       {/* The Cleansing (Purging Protocols) */}
       <div style={{ marginTop: '4rem', paddingTop: '2rem', borderTop: '1px solid var(--color-earth)' }}>
         <h2 className="glitch" data-text="The Cleansing Matrix" style={{ fontSize: '2rem', marginBottom: '2rem' }}>The Cleansing Matrix</h2>
-        <div className="admin-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '2rem' }}>
+        <div className="admin-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem' }}>
           
           {/* Users Purge */}
           <div className="glass-panel" style={{ borderTop: '4px solid #ff3333' }}>
