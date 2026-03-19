@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Upload, Crown, Music, Megaphone, Calendar as CalendarIcon, ArrowRight } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 
@@ -9,6 +9,17 @@ export default function UserProfile({ profile, onProfileUpdate }: { user: any, p
   const [saving, setSaving] = useState(false);
   const [bulletins, setBulletins] = useState<any[]>([]);
   const [roadmap, setRoadmap] = useState<any[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setAvatarUrl(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
 
   useEffect(() => {
     supabase.from('app_bulletin').select('*').order('created_at', { ascending: false }).limit(3)
@@ -94,7 +105,7 @@ export default function UserProfile({ profile, onProfileUpdate }: { user: any, p
                   {r.title}
                 </li>
               )) : (
-                <p style={{ color: 'var(--text-secondary)' }}>No roadmap milestones documented.</p>
+                <li style={{ color: 'var(--text-secondary)' }}>No roadmap milestones documented.</li>
               )}
             </ul>
           </div>
@@ -107,9 +118,10 @@ export default function UserProfile({ profile, onProfileUpdate }: { user: any, p
           <div className="glass-panel" style={{ textAlign: 'center', padding: '2.5rem 2rem', position: 'relative', overflow: 'hidden' }}>
             <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100px', background: 'linear-gradient(to bottom, rgba(212,175,55,0.15), transparent)' }}></div>
             
+            <input type="file" ref={fileInputRef} hidden accept="image/*" onChange={handleImageUpload} />
             <div style={{ position: 'relative', width: '130px', height: '130px', margin: '0 auto 1.5rem', borderRadius: '50%', overflow: 'hidden', border: '3px solid var(--gold)', background: 'var(--color-obsidian)', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}>
               <img src={avatarUrl || profile.avatar_url || '/assets/images/avatar_mock.png'} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'rgba(0,0,0,0.7)', padding: '6px', cursor: 'pointer', display: 'flex', justifyContent: 'center' }}>
+              <div onClick={() => fileInputRef.current?.click()} style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'rgba(0,0,0,0.7)', padding: '6px', cursor: 'pointer', display: 'flex', justifyContent: 'center', transition: 'background 0.3s' }} onMouseOver={e => e.currentTarget.style.background = 'rgba(212,175,55,0.4)'} onMouseOut={e => e.currentTarget.style.background = 'rgba(0,0,0,0.7)'}>
                 <Upload size={16} color="var(--color-sand)" />
               </div>
             </div>

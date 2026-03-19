@@ -55,17 +55,18 @@ export default function Chat({ user, profile }: { user: any, profile: any }) {
     }
   }, [profile, user]);
 
-  useEffect(() => {
-    const fetchMessages = async () => {
-      const { data } = await supabase
-        .from('messages')
-        .select('*, profiles(username, role)')
-        .eq('channel', activeChannel)
-        .order('created_at', { ascending: true });
-      
-      if (data) setMessages(data);
-    };
+  const fetchMessages = async () => {
+    const { data, error } = await supabase
+      .from('messages')
+      .select('*, profiles(username, role)')
+      .eq('channel', activeChannel)
+      .order('created_at', { ascending: true });
+    
+    if (error) console.error("Codex Error:", error);
+    if (data) setMessages(data);
+  };
 
+  useEffect(() => {
     fetchMessages();
 
     // Subscribe to new messages
@@ -92,13 +93,18 @@ export default function Chat({ user, profile }: { user: any, profile: any }) {
     e.preventDefault();
     if ((!input.trim() && !mediaUrl.trim()) || !user) return;
     
-    await supabase.from('messages').insert([
+    const { error } = await supabase.from('messages').insert([
       { channel: activeChannel, user_id: user.id, message: input, media_url: mediaUrl || null }
     ]);
     
-    setInput('');
-    setMediaUrl('');
-    setShowMediaInput(false);
+    if (error) {
+       alert("Codex Transmission Failed: " + error.message);
+    } else {
+       setInput('');
+       setMediaUrl('');
+       setShowMediaInput(false);
+       fetchMessages();
+    }
   };
 
   const formatTime = (isoString: string) => {
