@@ -74,6 +74,30 @@ export default function TrueCalendar() {
           </div>
         </div>
 
+        {/* Biblical Moedim (Appointed Times) */}
+        <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', padding: '40px 30px', width: '100%' }}>
+          <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', borderBottom: '1px solid var(--color-earth)', paddingBottom: '1rem', fontSize: '1.3rem' }}>
+            <CalendarPlus size={24} color="var(--color-bronze)" /> Appointed Times (Moedim)
+          </h3>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
+            {[
+              { name: 'Pesach (Passover)', date: 'Month 1, Day 14' },
+              { name: 'Chag HaMatzot (Unleavened Bread)', date: 'Month 1, Day 15-21' },
+              { name: 'Bikkurim (First Fruits)', date: 'Month 1, Day 16' },
+              { name: 'Shavuot (Feast of Weeks)', date: 'Month 3, Day 15' },
+              { name: 'Yom Teruah (Feast of Trumpets)', date: 'Month 7, Day 1' },
+              { name: 'Yom Kippur (Day of Atonement)', date: 'Month 7, Day 10' },
+              { name: 'Sukkot (Feast of Tabernacles)', date: 'Month 7, Day 15-21' },
+              { name: 'Shemini Atzeret (The 8th Day)', date: 'Month 7, Day 22' },
+            ].map((moed, idx) => (
+              <div key={idx} style={{ background: 'rgba(0,0,0,0.4)', padding: '1rem', borderRadius: '8px', borderLeft: '4px solid var(--color-gold-radiant)' }}>
+                <p style={{ fontSize: '0.8rem', color: 'var(--color-bronze)', marginBottom: '0.2rem', textTransform: 'uppercase', letterSpacing: '1px' }}>{moed.date}</p>
+                <h4 style={{ color: 'var(--text-primary)', fontSize: '1.1rem', margin: 0 }}>{moed.name}</h4>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Upcoming Epoch Events */}
         <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', padding: '40px 30px', width: '100%' }}>
           <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', borderBottom: '1px solid var(--color-earth)', paddingBottom: '1rem', fontSize: '1.3rem' }}>

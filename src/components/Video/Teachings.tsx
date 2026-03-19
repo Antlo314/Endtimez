@@ -106,6 +106,20 @@ export default function Teachings({ user }: { user: any, profile?: any }) {
     <div className="page-container fade-in">
       {/* Intro Section */}
       <div style={{ width: '100%' }}>
+        <video 
+          autoPlay loop muted playsInline 
+          style={{ 
+            width: '100%', 
+            height: '400px', 
+            objectFit: 'cover', 
+            borderRadius: '12px',
+            border: '1px solid var(--gold)',
+            boxShadow: '0 8px 32px rgba(212, 175, 55, 0.1)',
+            marginBottom: '2rem'
+          }}
+        >
+          <source src="/assets/videos/lastdayz_2027.mp4" type="video/mp4" />
+        </video>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
           <h2 className="glitch" data-text="Esoteric Teachings">Esoteric Teachings</h2>
         </div>
