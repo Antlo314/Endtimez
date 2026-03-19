@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Upload, Crown, Music, Megaphone, Calendar as CalendarIcon, ArrowRight } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 
-export default function UserProfile({ profile, onProfileUpdate }: { user: any, profile: any, onProfileUpdate: (id: string) => void }) {
+export default function UserProfile({ user, profile, onProfileUpdate }: { user: any, profile: any, onProfileUpdate: (id: string) => void }) {
   const [bio, setBio] = useState('');
   const [username, setUsername] = useState('');
   const [avatarUrl, setAvatarUrl] = useState('');
@@ -73,15 +73,15 @@ export default function UserProfile({ profile, onProfileUpdate }: { user: any, p
   };
 
   const handleSaveBio = async () => {
-    if (!profile) return;
+    if (!profile || !user?.id) return;
     setSaving(true);
-    const { error } = await supabase.from('profiles').update({ bio, username, avatar_url: avatarUrl }).eq('id', profile.id);
+    const { error } = await supabase.from('profiles').update({ bio, username, avatar_url: avatarUrl }).eq('id', user.id);
     if (error) {
       console.error(error);
       alert('Failed to update records: ' + error.message);
     } else {
       alert('Sanctum records successfully updated.');
-      onProfileUpdate(profile.id);
+      onProfileUpdate(user.id);
     }
     setSaving(false);
   };
