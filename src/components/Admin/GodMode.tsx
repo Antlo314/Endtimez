@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Upload, FileText, Megaphone, CalendarPlus } from 'lucide-react';
 
-export default function GodMode({ user, profile }: { user: any, profile?: any }) {
+export default function GodMode({ user }: { user: any, profile?: any }) {
   const [bulletin, setBulletin] = useState('New album "MIDNIGHT" is out now. The true calendar begins next month.');
 
   if (!user || user.role !== 'admin') {

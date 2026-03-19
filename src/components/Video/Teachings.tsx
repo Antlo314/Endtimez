@@ -1,6 +1,6 @@
 import { PlayCircle, Lock, BookOpen } from 'lucide-react';
 
-export default function Teachings({ user, profile }: { user: any, profile?: any }) {
+export default function Teachings({ user }: { user: any, profile?: any }) {
   const videos = [
     { id: 1, title: 'The True Sabbaths & Feasts', duration: '45:20', locked: false, thumbnail: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=600&auto=format&fit=crop' },
     { id: 2, title: 'Book of Enoch: The Watchers', duration: '1:12:05', locked: false, thumbnail: 'https://images.unsplash.com/photo-1519074069444-1ba4fff66d16?q=80&w=600&auto=format&fit=crop' },

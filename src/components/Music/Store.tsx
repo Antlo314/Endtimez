@@ -6,11 +6,11 @@ export default function Store() {
   const [playingId, setPlayingId] = useState<string | null>(null);
   const [albums, setAlbums] = useState<any[]>([]);
   const [singles, setSingles] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchCatalog = async () => {
-      const { data, error } = await supabase.from('music_catalog').select('*').order('created_at', { ascending: false });
+      const { data } = await supabase.from('music_catalog').select('*').order('created_at', { ascending: false });
       
       const hardcodedAlbums = [
         { id: 'a1', title: 'MIDNIGHT', type: 'Album', price: 14.99, cover_url: '/assets/images/midnight_cover.png', is_new: true },

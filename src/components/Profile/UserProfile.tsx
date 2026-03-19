@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Upload, Crown, Music } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 
-export default function UserProfile({ user, profile, onProfileUpdate }: { user: any, profile: any, onProfileUpdate: (id: string) => void }) {
+export default function UserProfile({ profile, onProfileUpdate }: { user: any, profile: any, onProfileUpdate: (id: string) => void }) {
   const [bio, setBio] = useState('');
   const [saving, setSaving] = useState(false);
 
