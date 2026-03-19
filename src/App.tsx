@@ -26,7 +26,7 @@ function Navigation({ user, profile }: { user: any, profile: any }) {
         </Link>
         <Link to="/chat"><MessageSquare size={18}/> Codex</Link>
         <Link to="/calendar"><Calendar size={18}/> Epoch</Link>
-        <Link to="/music"><Music size={18}/> Treasury</Link>
+        <Link to="/music"><Music size={18}/> Hymns</Link>
         <Link to="/teachings"><BookOpen size={18}/> Vault</Link>
         {profile?.role === 'admin' && (
           <Link to="/admin" className="accent-link"><Crown size={18}/> God Mode</Link>
@@ -84,11 +84,11 @@ function App() {
     return () => subscription.unsubscribe();
   }, []);
 
-  const fetchProfile = async (userId: string) => {
+  async function fetchProfile(userId: string) {
     const { data } = await supabase.from('profiles').select('*').eq('id', userId).single();
     if (data) setProfile(data);
     setLoading(false);
-  };
+  }
 
   if (loading) {
     return <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-gold-radiant)' }}>Connecting to the Heavens...</div>;
