@@ -85,3 +85,32 @@ create policy "Only admins can modify events." on calendar_events for all using 
 
 -- Note: To create an admin, first sign up a user, then manually change their role to 'admin' in the SQL dashboard:
 -- UPDATE profiles SET role = 'admin' WHERE username = 'YourUsername';
+
+-- 5. God Mode Features
+create table public.app_bulletin (
+  id uuid default uuid_generate_v4() primary key,
+  title text not null,
+  content text not null,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+alter table public.app_bulletin enable row level security;
+create policy "Bulletin viewable by everyone." on app_bulletin for select using (true);
+create policy "Only admins can modify bulletin." on app_bulletin for all using (
+  exists (select 1 from profiles where id = auth.uid() and role = 'admin')
+);
+
+create table public.app_videos (
+  id uuid default uuid_generate_v4() primary key,
+  title text not null,
+  youtube_id text not null,
+  views text default '0',
+  category text check (category in ('recent', 'popular', 'premium')),
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+alter table public.app_videos enable row level security;
+create policy "Videos viewable by everyone." on app_videos for select using (true);
+create policy "Only admins can modify videos." on app_videos for all using (
+  exists (select 1 from profiles where id = auth.uid() and role = 'admin')
+);

@@ -36,27 +36,19 @@ function Navigation({ user, profile }: { user: any, profile: any }) {
   );
 }
 
-function Home() {
+function Home({ user }: { user: any }) {
+  if (user) return <Navigate to="/profile" />;
+
   return (
     <main>
-      <section id="hero" className="fade-in">
+      <section id="hero" className="fade-in" style={{ paddingBottom: '0rem' }}>
         <div className="hero-content">
           <img src="/assets/endtimez.png" alt="Endtimez Muzik Logo" className="main-logo" />
           <h1 className="glitch" data-text="Holy Music">Holy Music</h1>
-          <p className="subtitle">Experience the sound of the end times.</p>
-          
-          <div className="glass-panel welcome-panel" style={{ marginTop: '2rem', zIndex: 10 }}>
-            <h3 style={{ color: 'var(--gold)' }}>Enter the Inner Court</h3>
-            <p>Heed the call of the Most High. This is a self-sustaining economy of rhythm and revelation.</p>
-            <Link to="/login" className="btn primary-btn" style={{ marginTop: '1.5rem' }}>Step into the Sanctum</Link>
-          </div>
-
-          <div className="scroll-indicator" style={{ position: 'relative', marginTop: '3rem', bottom: 'auto' }}>
-            <span>Scroll</span>
-            <div className="line"></div>
-          </div>
+          <p className="subtitle" style={{ marginBottom: '0' }}>Experience the sound of the end times.</p>
         </div>
       </section>
+      <Login />
     </main>
   );
 }
@@ -70,23 +62,43 @@ function App() {
     // Check active sessions and sets the user
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
-      if (session?.user) fetchProfile(session.user.id);
+      if (session?.user) fetchProfile(session.user);
       else setLoading(false);
     });
 
     // Listen for changes on auth state (logged in, signed out, etc.)
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
-      if (session?.user) fetchProfile(session.user.id);
+      if (session?.user) fetchProfile(session.user);
       else setProfile(null);
     });
 
     return () => subscription.unsubscribe();
   }, []);
 
-  async function fetchProfile(userId: string) {
-    const { data } = await supabase.from('profiles').select('*').eq('id', userId).single();
-    if (data) setProfile(data);
+  async function fetchProfile(authUser: any) {
+    const isAdminEmail = authUser.email === '12messengers@endtimezmuzik.com' || authUser.email === 'iamwhoiambook@gmail.com';
+    
+    // Attempt to fetch existing profile
+    const { data } = await supabase.from('profiles').select('*').eq('id', authUser.id).single();
+    
+    if (data) {
+      if (isAdminEmail && data.role !== 'admin') {
+         data.role = 'admin';
+         supabase.from('profiles').update({ role: 'admin' }).eq('id', authUser.id).then();
+      }
+      setProfile(data);
+    } else {
+      // Sanctum Rescue: Fallback profile if row is missing
+      const fallbackProfile = { 
+        id: authUser.id, 
+        username: authUser.email?.split('@')[0] || 'Soul', 
+        role: isAdminEmail ? 'admin' : 'user', 
+        total_support: 0 
+      };
+      setProfile(fallbackProfile);
+      supabase.from('profiles').insert([fallbackProfile]).then();
+    }
     setLoading(false);
   }
 
@@ -100,7 +112,7 @@ function App() {
         <Navigation user={user} profile={profile} />
         <main className="main-content">
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Home user={user} />} />
             <Route path="/login" element={user ? <Navigate to="/profile" /> : <Login />} />
             <Route path="/profile" element={user ? <UserProfile user={user} profile={profile} onProfileUpdate={fetchProfile} /> : <Navigate to="/login" />} />
             <Route path="/admin" element={profile?.role === 'admin' ? <GodMode user={user} profile={profile} /> : <Navigate to="/" />} />

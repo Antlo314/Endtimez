@@ -5,6 +5,12 @@ import { supabase } from '../../lib/supabase';
 export default function UserProfile({ profile, onProfileUpdate }: { user: any, profile: any, onProfileUpdate: (id: string) => void }) {
   const [bio, setBio] = useState('');
   const [saving, setSaving] = useState(false);
+  const [bulletins, setBulletins] = useState<any[]>([]);
+
+  useEffect(() => {
+    supabase.from('app_bulletin').select('*').order('created_at', { ascending: false }).limit(3)
+      .then(({ data }) => { if (data) setBulletins(data); });
+  }, []);
 
   useEffect(() => {
     if (profile?.bio) {
@@ -48,24 +54,18 @@ export default function UserProfile({ profile, onProfileUpdate }: { user: any, p
             </h3>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-              {/* Update Item 1 */}
-              <div style={{ borderLeft: '3px solid var(--gold)', paddingLeft: '1.5rem', position: 'relative' }}>
-                <div style={{ position: 'absolute', left: '-5px', top: '2px', width: '7px', height: '7px', borderRadius: '50%', background: 'var(--color-gold-radiant)', boxShadow: '0 0 10px var(--color-gold-radiant)'}}></div>
-                <span style={{ fontSize: '0.8rem', color: 'var(--color-bronze)', fontWeight: 600, letterSpacing: '1px' }}>LATEST UPDATE</span>
-                <h4 style={{ color: 'var(--text-color)', fontSize: '1.2rem', marginTop: '0.5rem', marginBottom: '0.5rem', fontFamily: 'var(--font-heading)' }}>The Vault is Open</h4>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6 }}>
-                  DarakiBar's YouTube compilation is now freely accessible in the Vault. Premium exclusive content is currently in production—stay alert for the first drop. Gather your coordinates and prepare.
-                </p>
-              </div>
-              
-              {/* Update Item 2 */}
-              <div style={{ borderLeft: '3px solid var(--glass-border)', paddingLeft: '1.5rem', opacity: 0.7 }}>
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 600, letterSpacing: '1px' }}>SYSTEM LOG</span>
-                <h4 style={{ color: 'var(--color-sand)', fontSize: '1.1rem', marginTop: '0.5rem', marginBottom: '0.5rem', fontFamily: 'var(--font-heading)' }}>New UI Alignment</h4>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6 }}>
-                  The Endtimez Music aesthetic has successfully synchronized with the true frequency. Navigation arrays have been recalibrated.
-                </p>
-              </div>
+              {bulletins.length > 0 ? bulletins.map((b, i) => (
+                <div key={b.id} style={{ borderLeft: `3px solid ${i === 0 ? 'var(--gold)' : 'var(--glass-border)'}`, paddingLeft: '1.5rem', position: 'relative', opacity: i === 0 ? 1 : 0.7 }}>
+                  {i === 0 && <div style={{ position: 'absolute', left: '-5px', top: '2px', width: '7px', height: '7px', borderRadius: '50%', background: 'var(--color-gold-radiant)', boxShadow: '0 0 10px var(--color-gold-radiant)'}}></div>}
+                  <span style={{ fontSize: '0.8rem', color: i === 0 ? 'var(--color-bronze)' : 'var(--text-secondary)', fontWeight: 600, letterSpacing: '1px' }}>
+                    {new Date(b.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).toUpperCase()}
+                  </span>
+                  <h4 style={{ color: i === 0 ? 'var(--text-color)' : 'var(--color-sand)', fontSize: '1.2rem', marginTop: '0.5rem', marginBottom: '0.5rem', fontFamily: 'var(--font-heading)' }}>{b.title}</h4>
+                  <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6 }}>{b.content}</p>
+                </div>
+              )) : (
+                <p style={{ color: 'var(--text-secondary)' }}>No decrees have been recorded.</p>
+              )}
             </div>
           </div>
 

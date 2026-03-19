@@ -1,6 +1,29 @@
+import { useState, useEffect } from 'react';
 import { PlayCircle, Lock, Crown, TrendingUp, Clock } from 'lucide-react';
+import { supabase } from '../../lib/supabase';
 
 export default function Teachings({ user }: { user: any, profile?: any }) {
+  const [dynRecent, setDynRecent] = useState<any[]>([]);
+  const [dynPopular, setDynPopular] = useState<any[]>([]);
+  const [dynPremium, setDynPremium] = useState<any[]>([]);
+
+  useEffect(() => {
+    supabase.from('app_videos').select('*').order('created_at', { ascending: false })
+      .then(({ data }) => {
+        if (data) {
+          const mapVideo = (v: any) => ({
+            id: v.id, title: v.title, views: v.views + ' views', 
+            link: `https://www.youtube.com/watch?v=${v.youtube_id}`, 
+            thumbnail: `https://img.youtube.com/vi/${v.youtube_id}/mqdefault.jpg`,
+            locked: v.category === 'premium'
+          });
+          setDynRecent(data.filter(v => v.category === 'recent').map(mapVideo));
+          setDynPopular(data.filter(v => v.category === 'popular').map(mapVideo));
+          setDynPremium(data.filter(v => v.category === 'premium').map(mapVideo));
+        }
+      });
+  }, []);
+
   const freeVideos = [
     { id: 1, title: 'The True Sabbaths & Feasts', duration: '45:20', locked: false, link: '#', thumbnail: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=600&auto=format&fit=crop' },
     { id: 2, title: 'Book of Enoch: The Watchers', duration: '1:12:05', locked: false, link: '#', thumbnail: 'https://images.unsplash.com/photo-1519074069444-1ba4fff66d16?q=80&w=600&auto=format&fit=crop' },
@@ -91,13 +114,13 @@ export default function Teachings({ user }: { user: any, profile?: any }) {
         {/* Popular Videos Row (UNLOCKED) */}
         <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-color)', marginBottom: '1.5rem', fontSize: '1.5rem', textAlign: 'left' }}><TrendingUp size={24} color="var(--gold)"/> Most Viewed Wisdom</h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '2rem', marginBottom: '4rem' }}>
-          {popularReleases.map(v => renderVideoCard(v, false))}
+          {[...dynPopular, ...popularReleases].map(v => renderVideoCard(v, false))}
         </div>
 
         {/* Recent Videos Row (UNLOCKED) */}
         <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-color)', marginBottom: '1.5rem', fontSize: '1.5rem', textAlign: 'left' }}><Clock size={24} color="var(--gold)"/> Latest Prophetic Releases</h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '2rem', marginBottom: '4rem' }}>
-          {recentReleases.map(v => renderVideoCard(v, false))}
+          {[...dynRecent, ...recentReleases].map(v => renderVideoCard(v, false))}
         </div>
         
         {/* Additional Vault Resources */}
@@ -119,7 +142,7 @@ export default function Teachings({ user }: { user: any, profile?: any }) {
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '2rem', marginBottom: '4rem' }}>
-          {premiumPlaceholders.map(v => renderVideoCard(v, true, true))}
+          {[...dynPremium, ...premiumPlaceholders].map((v, i) => renderVideoCard(v, true, i >= dynPremium.length))}
         </div>
       </div>
     </div>
